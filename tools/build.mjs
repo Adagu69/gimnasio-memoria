@@ -32,9 +32,8 @@ writeFileSync('dist/index.html', single);
 
 // Fragmento para artefacto: título + meta de laterales + estilos + cuerpo + script
 const body = single.slice(single.indexOf('<body>') + 6, single.lastIndexOf('</body>'));
-const fonts = single.match(/<link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com[^>]*>/)[0];
 const style = single.match(/<style>[\s\S]*?<\/style>/)[0];
-const fragment = `<title>Gimnasio de Memoria</title>\n<meta name="claude:viewport-fit-sides" content="cover">\n${fonts}\n${style}\n${body}`;
+const fragment = `<title>Gimnasio de Memoria</title>\n<meta name="claude:viewport-fit-sides" content="cover">\n${style}\n${body}`;
 writeFileSync('dist/artifact.html', fragment);
 
 console.log('dist/index.html', (single.length / 1024).toFixed(1), 'KB ·', 'dist/artifact.html', (fragment.length / 1024).toFixed(1), 'KB');

@@ -1,7 +1,7 @@
 // nback.js — minijuego N-Back espacial (memoria de trabajo).
 // 20 turnos puntuables; ~32 % de objetivos. La regla 85 % / 60 % recomienda subir o bajar N
 // y la recomendación se guarda como N inicial para la próxima sesión.
-import { $, $$, setMsg } from '../ui.js';
+import { $, $$, setMsg, enter, haptic } from '../ui.js';
 import { store } from '../store.js';
 import { tone, sfx } from '../audio.js';
 
@@ -51,8 +51,8 @@ function match() {
   if (!running || responded || i === 0) return;
   responded = true; const cur = i - 1;
   if (cur < N) { setMsg(elMsg, 'Todavía no hay con qué comparar.'); return; }
-  if (seq[cur] === seq[cur - N]) { hits++; sfx.ok(); setMsg(elMsg, 'Acierto.', 'ok'); }
-  else { fa++; sfx.bad(); setMsg(elMsg, 'Falsa alarma.', 'bad'); }
+  if (seq[cur] === seq[cur - N]) { hits++; sfx.ok(); haptic(10); setMsg(elMsg, 'Acierto.', 'ok'); }
+  else { fa++; sfx.bad(); haptic([20, 40, 20]); setMsg(elMsg, 'Falsa alarma.', 'bad'); }
   hud();
 }
 
@@ -66,7 +66,7 @@ function finish() {
   if (acc >= 85 && N < MAX_N) { nextN = N + 1; elReco.textContent = `Sube a N = ${nextN}`; elReco.className = 'pill ok'; }
   else if (acc < 60 && N > 1) { nextN = N - 1; elReco.textContent = `Baja a N = ${nextN}`; elReco.className = 'pill bad'; }
   else { elReco.textContent = `Mantén N = ${N}`; elReco.className = 'pill warn'; }
-  elReco.hidden = false;
+  elReco.hidden = false; enter(elReco);
   const result = { game: 'nback', n: N, acc, hits, miss, fa };
   store.addSession(result);
   if (acc >= 85 || acc < 60) sfx.win();
@@ -91,7 +91,9 @@ export const nback = {
     for (let k = 0; k < 9; k++) { const c = document.createElement('div'); c.className = 'cell'; c.innerHTML = '<span class="dot"></span>'; grid.appendChild(c); cells.push(c); }
     seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || running) return; setN(+b.dataset.n); });
     bStart.addEventListener('click', () => running ? stop() : start());
-    bMatch.addEventListener('click', match);
+    // Respuesta en pointer-down: el acierto se registra en el instante de la pulsación, no al soltar.
+    bMatch.addEventListener('pointerdown', e => { if (e.button === 0) match(); });
+    bMatch.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); match(); } });
     document.addEventListener('keydown', e => {
       if (e.code === 'Space' && running && !$('#v-nback').hidden) { e.preventDefault(); match(); }
     });

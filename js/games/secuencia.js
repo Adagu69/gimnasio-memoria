@@ -1,7 +1,7 @@
 // secuencia.js — minijuego Secuencia (tarea de bloques de Corsi).
 // Modo directo: repetir el orden mostrado. Modo inverso: repetirlo al revés.
 // Dos intentos por longitud; la amplitud (span) es la última longitud superada.
-import { $, $$, setMsg } from '../ui.js';
+import { $, $$, setMsg, enter, haptic } from '../ui.js';
 import { store } from '../store.js';
 import { tone, sfx, BLOCK_FREQ } from '../audio.js';
 
@@ -32,7 +32,7 @@ function next() {
   elLen.textContent = len; seq = []; let last = -1;
   for (let i = 0; i < len; i++) { let r; do { r = Math.floor(Math.random() * 9); } while (r === last); seq.push(r); last = r; }
   expected = mode === 'inverso' ? [...seq].reverse() : seq;
-  elTries.hidden = false; elTries.textContent = tries === 0 ? 'Intento 1 de 2' : 'Intento 2 de 2'; elTries.className = 'pill ' + (tries ? 'warn' : '');
+  elTries.hidden = false; elTries.textContent = tries === 0 ? 'Intento 1 de 2' : 'Intento 2 de 2'; elTries.className = 'pill ' + (tries ? 'warn' : ''); enter(elTries);
   show();
 }
 
@@ -52,17 +52,17 @@ function show() {
 
 function tap(i) {
   if (!input) return;
-  const b = blocks[i]; tone(BLOCK_FREQ[i], 140);
+  const b = blocks[i];
   if (expected[pos] === i) {
     b.classList.add('hit'); setTimeout(() => b.classList.remove('hit'), 180); pos++;
     if (pos === expected.length) {
-      input = false; span = len; tries = 0; elSpan.textContent = span; blocks.forEach(x => x.disabled = true); sfx.ok();
+      input = false; span = len; tries = 0; elSpan.textContent = span; blocks.forEach(x => x.disabled = true); sfx.ok(); haptic(10);
       if (len >= MAX_LEN) { finish('Has llegado al máximo de ' + MAX_LEN + ' bloques.'); return; }
       set('Correcto', `Bien. Siguiente: ${len + 1} bloques.`, 'ok'); len++;
       timers.push(setTimeout(next, 1100));
     }
   } else {
-    input = false; b.classList.add('miss'); blocks.forEach(x => x.disabled = true); sfx.bad();
+    input = false; b.classList.add('miss'); blocks.forEach(x => x.disabled = true); sfx.bad(); haptic([20, 40, 20]);
     timers.push(setTimeout(() => b.classList.remove('miss'), 500));
     if (tries === 0) {
       tries = 1; set('Casi', `Error en el bloque ${pos + 1}. Otra oportunidad con ${len} bloques.`, 'warn');
@@ -87,6 +87,10 @@ export const secuencia = {
     grid = $('#s-grid'); elLen = $('#s-len'); elSpan = $('#s-span'); elState = $('#s-state'); elMsg = $('#s-msg'); elTries = $('#s-tries'); bStart = $('#s-start'); segMode = $('#s-mode');
     for (let i = 0; i < 9; i++) {
       const b = document.createElement('button'); b.className = 'block'; b.disabled = true; b.setAttribute('aria-label', 'Bloque ' + (i + 1));
+      // La respuesta vive en la pulsación: tono y realce al bajar el dedo; la validación, al soltar.
+      b.addEventListener('pointerdown', () => { if (input) { b.classList.add('pressing'); tone(BLOCK_FREQ[i], 140); } });
+      const release = () => b.classList.remove('pressing');
+      b.addEventListener('pointerup', release); b.addEventListener('pointercancel', release); b.addEventListener('pointerleave', release);
       b.addEventListener('click', () => tap(i)); grid.appendChild(b); blocks.push(b);
     }
     segMode.addEventListener('click', e => {

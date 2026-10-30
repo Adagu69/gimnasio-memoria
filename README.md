@@ -11,7 +11,11 @@ Aplicación web para entrenar la memoria con tres ejercicios cortos, cada uno ap
 Además: **rutina diaria** con puntaje y racha, **progreso** con historial y gráficos, **logros**, ayuda por juego, ajustes (nombre, sonido, tema) y vista de **planes** (modelo freemium).
 
 - **Juego en línea:** https://gimnasio-memoria.vercel.app
-- **Capturas:** `docs/capturas/` · **Video demostrativo:** `docs/video/demo.mp4`
+- **Capturas:** `docs/capturas/` · **Video demostrativo:** `docs/video/demo.mp4` · **Informe final:** `docs/informe/Informe-Gimnasio-de-Memoria.docx` (se genera con `npm run informe`)
+
+## Diseño de interfaz (v1.1)
+
+La interfaz sigue los principios de interfaces fluidas de Apple traducidos a la web: respuesta en pointer-down, curvas de resorte `linear()` solo sobre `transform` y `opacity` (interrumpibles), materiales translúcidos con `backdrop-filter`, modal anclado al control que lo abre, fuente del sistema con tracking por tamaño y soporte de `prefers-reduced-motion`, `prefers-reduced-transparency` y `prefers-contrast`.
 
 ## Tecnologías
 

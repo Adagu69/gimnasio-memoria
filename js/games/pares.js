@@ -1,7 +1,7 @@
 // pares.js — minijuego Pares (memoria visual a corto plazo).
 // Fase 1: el tablero se muestra destapado unos segundos (codificación).
 // Fase 2: se tapa y hay que encontrar las parejas (recuperación).
-import { $, fmtTime, setMsg } from '../ui.js';
+import { $, fmtTime, setMsg, haptic } from '../ui.js';
 import { store } from '../store.js';
 import { sfx } from '../audio.js';
 
@@ -71,7 +71,7 @@ function flip(b) {
   if (a.dataset.s === b.dataset.s) {
     setTimeout(() => {
       a.classList.add('done'); b.classList.add('done'); lock = false; matched++;
-      elPairs.textContent = matched + '/' + total; sfx.ok();
+      elPairs.textContent = matched + '/' + total; sfx.ok(); haptic(10);
       if (matched === total) win();
     }, 250);
   } else {
@@ -84,7 +84,7 @@ function win() {
   const secs = Math.floor((Date.now() - t0) / 1000);
   const eff = Math.min(100, Math.round(100 * total / moves));
   const st = stars(total, moves);
-  renderStars(st); sfx.win();
+  renderStars(st); sfx.win(); haptic([15, 60, 30]);
   setMsg(elMsg, `Nivel ${level + 1} completado: ${moves} intentos en ${fmtTime(secs)} (eficiencia ${eff}%).`, 'ok');
   const result = { game: 'pares', level: level + 1, moves, secs, eff, stars: st };
   store.addSession(result);

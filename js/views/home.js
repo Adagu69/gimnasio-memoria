@@ -1,5 +1,5 @@
 // home.js — vista de inicio: saludo, resumen por juego y racha.
-import { $ } from '../ui.js';
+import { $, enter } from '../ui.js';
 import { store } from '../store.js';
 
 export function renderHome() {
@@ -11,6 +11,7 @@ export function renderHome() {
   $('#h-nback-n').textContent = n.length; $('#h-nback-best').textContent = n.length ? Math.max(...n.map(x => x.acc)) + '%' : '–';
   const st = store.streak();
   const el = $('#home-streak');
-  el.hidden = st === 0;
+  const was = el.hidden; el.hidden = st === 0;
+  if (was && !el.hidden) enter(el);
   el.textContent = st === 1 ? '🔥 1 día de racha' : `🔥 ${st} días de racha`;
 }

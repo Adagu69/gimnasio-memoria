@@ -1,6 +1,6 @@
 {
   "name": "gimnasio-memoria",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Aplicación web para entrenar la memoria: Pares, Secuencia (Corsi) y N-Back, con rutina diaria y progreso local.",
   "private": true,
   "type": "module",
@@ -9,11 +9,13 @@
     "build": "node tools/build.mjs",
     "test": "node tools/test.mjs",
     "capturas": "node tools/capturas.mjs",
-    "video": "node tools/video.mjs"
+    "video": "node tools/video.mjs",
+    "informe": "node tools/informe.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.24.2",
-    "playwright": "^1.56.0"
+    "playwright": "^1.56.0",
+    "docx": "^9.0.0"
   },
   "license": "MIT"
 }

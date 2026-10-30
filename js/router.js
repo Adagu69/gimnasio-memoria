@@ -14,6 +14,9 @@ export function go(view, params = {}) {
   if (!VIEWS.includes(view)) view = 'home';
   if (current && leaveHooks[current]) leaveHooks[current].forEach(fn => fn());
   VIEWS.forEach(v => { $('#v-' + v).hidden = v !== view; });
+  // Entrada "desde el valor actual": se fija el estado inicial y, al siguiente frame, la transición
+  // lleva la vista a su reposo. Si el usuario cambia de vista a mitad, la transición se redirige sin salto.
+  if (view !== current) enterAnim($('#v-' + view));
   $$('nav button').forEach(b => {
     if (b.dataset.go === view) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
@@ -23,6 +26,21 @@ export function go(view, params = {}) {
 }
 
 export function currentView() { return current; }
+
+/** Marca el estado inicial (data-enter) y lo quita en el siguiente frame para que la transición CSS corra. */
+export function enterAnim(el) {
+  if (!el) return;
+  el.setAttribute('data-enter', '');
+  void el.offsetWidth; // fuerza el cálculo de estilos con el estado inicial
+  requestAnimationFrame(() => el.removeAttribute('data-enter'));
+}
+
+// Efecto de borde de la barra superior: aparece solo cuando hay contenido pasando por debajo.
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (ticking) return; ticking = true;
+  requestAnimationFrame(() => { document.body.classList.toggle('scrolled', window.scrollY > 4); ticking = false; });
+}, { passive: true });
 
 // Delegación global: cualquier [data-go] navega.
 document.addEventListener('click', e => {
