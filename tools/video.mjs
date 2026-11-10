@@ -1,19 +1,23 @@
-// video.mjs — graba un video demostrativo (webm) del flujo v2: bienvenida → configuración →
-// prueba de nivel → resultados → plan → Hoy → progreso. Convertir a MP4:
-//   ffmpeg -i docs/video/demo.webm -c:v libx264 -pix_fmt yuv420p -movflags +faststart docs/video/demo.mp4
+// video.mjs — graba un video demostrativo del flujo v2: bienvenida → configuración → prueba de nivel →
+// resultados → plan → Hoy → progreso. Captura fotogramas (8 por segundo) y los monta con ffmpeg en docs/video/demo.mp4.
 import { chromium } from 'playwright';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
-import { mkdirSync, renameSync, readdirSync } from 'node:fs';
+import { mkdirSync, rmSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 
 const url = pathToFileURL(resolve('dist/index.html')).href;
 const dir = 'docs/video';
 mkdirSync(dir, { recursive: true });
 
 const browser = await chromium.launch(process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {});
-const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, recordVideo: { dir, size: { width: 1280, height: 800 } }, locale: 'es-PE' });
+const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, locale: 'es-PE' });
 const page = await ctx.newPage();
 const pause = ms => page.waitForTimeout(ms);
+// Captura de fotogramas: un screenshot cada 125 ms mientras dure la demostración
+const frames = dir + '/frames'; rmSync(frames, { recursive: true, force: true }); mkdirSync(frames, { recursive: true });
+let n = 0, grabbing = true;
+(async () => { while (grabbing) { const t = Date.now(); try { await page.screenshot({ path: `${frames}/f${String(n++).padStart(5, '0')}.jpg`, type: 'jpeg', quality: 80 }); } catch (e) {} const d = Date.now() - t; if (d < 125) await new Promise(r => setTimeout(r, 125 - d)); } })();
 await page.addInitScript(() => {
   window.addEventListener('DOMContentLoaded', () => {
     const c = document.createElement('div');
@@ -109,8 +113,9 @@ await click('#v-juegos [data-help="secuencia"]'); await pause(2600);
 await click('#modal-actions .primary'); await pause(600);
 await click('.side nav [data-go="hoy"]'); await pause(2000);
 
+grabbing = false; await pause(300);
 await ctx.close();
 await browser.close();
-const f = readdirSync(dir).find(n => n.endsWith('.webm') && n !== 'demo.webm');
-renameSync(`${dir}/${f}`, `${dir}/demo.webm`);
-console.log('Video:', `${dir}/demo.webm`);
+execSync(`ffmpeg -hide_banner -loglevel error -y -framerate 8 -i ${frames}/f%05d.jpg -c:v libx264 -preset medium -crf 23 -pix_fmt yuv420p -r 25 -movflags +faststart ${dir}/demo.mp4`);
+rmSync(frames, { recursive: true, force: true });
+console.log('Video:', `${dir}/demo.mp4`, n, 'fotogramas');
