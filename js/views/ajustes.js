@@ -2,6 +2,9 @@
 import { $, $$, toast } from '../ui.js';
 import { store } from '../store.js';
 import { tone } from '../audio.js';
+import { sesion } from './sesion.js';
+import { config } from './config.js';
+import { GAMES } from '../indice.js';
 
 export function applyTheme(theme) {
   const root = document.documentElement;
@@ -27,6 +30,8 @@ export const ajustes = {
       $$('#a-theme button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
       store.setSetting('theme', b.dataset.theme); applyTheme(b.dataset.theme);
     });
+    $('#a-recal').addEventListener('click', () => sesion.start('calibracion'));
+    $('#a-reconfig').addEventListener('click', () => config.restart());
     $('#a-clear').addEventListener('click', () => { $('#a-confirm').hidden = false; });
     $('#a-no').addEventListener('click', () => { $('#a-confirm').hidden = true; });
     $('#a-yes').addEventListener('click', () => {
@@ -36,5 +41,11 @@ export const ajustes = {
       toast('Progreso borrado'); if (onDataCleared) onDataCleared();
     });
   },
-  enter() { $('#a-name').value = store.profile.name; }
+  enter() {
+    const p = store.profile; $('#a-name').value = p.name;
+    const goals = { entrenar: 'entrenar la memoria', mantener: 'mantener la mente activa', superar: 'superarse', explorar: 'explorar' };
+    $('#a-profile').textContent = p.onboarded
+      ? `Objetivo: ${goals[p.goal] || p.goal} · Áreas: ${(p.areas || []).map(g => GAMES[g].name).join(', ')} · Dificultad: ${p.difficulty} · Prueba de nivel: ${p.calibration ? new Date(p.calibration.date).toLocaleDateString('es-PE') + ' (índice ' + p.calibration.global + ')' : 'pendiente'}`
+      : 'Programa sin configurar.';
+  }
 };

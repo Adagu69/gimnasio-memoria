@@ -1,12 +1,15 @@
-// main.js — punto de entrada: inicializa módulos, enlaza vistas y da la bienvenida.
+// main.js — punto de entrada: inicializa módulos, enlaza vistas y decide la pantalla inicial.
+// Flujo: Bienvenida → Configuración → Prueba de nivel → Resultados → Plan → Hoy (sesión diaria).
 import { $, showModal, toast } from './ui.js';
 import { store } from './store.js';
 import { go, onEnter, onLeave } from './router.js';
 import { pares } from './games/pares.js';
 import { secuencia } from './games/secuencia.js';
 import { nback } from './games/nback.js';
-import { renderHome } from './views/home.js';
-import { rutina } from './views/rutina.js';
+import { config } from './views/config.js';
+import { sesion } from './views/sesion.js';
+import { hoy } from './views/hoy.js';
+import { renderJuegos } from './views/juegos.js';
 import { renderProgress, unlocked } from './views/progreso.js';
 import { ajustes } from './views/ajustes.js';
 import './views/ayuda.js';
@@ -14,20 +17,22 @@ import './views/ayuda.js';
 pares.init();
 secuencia.init();
 nback.init();
-rutina.init();
-ajustes.init(() => { pares.idle(); nback.refresh(); renderHome(); });
+config.init();
+sesion.init();
+hoy.init();
+ajustes.init(() => { pares.idle(); nback.refresh(); go('bienvenida'); });
 
 // Vistas
-onEnter('home', renderHome);
+onEnter('hoy', () => hoy.render());
+onEnter('juegos', renderJuegos);
 onEnter('progreso', renderProgress);
-onEnter('rutina', () => rutina.enter());
 onEnter('ajustes', () => ajustes.enter());
 onEnter('nback', () => nback.refresh());
 
-// Al salir de un juego se detiene; si era un paso de la rutina, ésta se cancela.
-onLeave('pares', () => { rutina.onLeaveGame('pares'); pares.stop(); });
-onLeave('secuencia', () => { rutina.onLeaveGame('secuencia'); secuencia.stop(); });
-onLeave('nback', () => { rutina.onLeaveGame('nback'); nback.stop(); });
+// Al salir de un juego se detiene; si era un paso de la sesión, ésta se cancela.
+onLeave('pares', () => { sesion.onLeaveGame('pares'); pares.stop(); });
+onLeave('secuencia', () => { sesion.onLeaveGame('secuencia'); secuencia.stop(); });
+onLeave('nback', () => { sesion.onLeaveGame('nback'); nback.stop(); });
 
 // Logros: avisar cuando se desbloquea uno nuevo
 let known = new Set(unlocked().map(a => a.id));
@@ -44,21 +49,8 @@ $('#pl-pro').addEventListener('click', () => showModal({
   actions: [{ label: 'Entendido', primary: true }]
 }));
 
-// Bienvenida: pedir nombre la primera vez
-function welcome() {
-  showModal({
-    title: 'Bienvenido al Gimnasio de Memoria',
-    html: '<p class="muted">¿Cómo te llamas? Usaremos tu nombre para saludarte y llevar tu progreso en este navegador.</p><input id="w-name" type="text" maxlength="24" placeholder="Tu nombre" autocomplete="given-name">',
-    actions: [
-      { label: 'Ahora no', ghost: true, onClick: () => { store.setName(''); } },
-      { label: 'Empezar', primary: true, onClick: () => { store.setName($('#w-name').value || ''); renderHome(); } }
-    ]
-  });
-  $('#w-name').addEventListener('keydown', e => { if (e.key === 'Enter') $('#modal-actions .primary').click(); });
-}
-
-go('home');
-if (!store.profile.name && store.sessions.length === 0 && !store.welcomed()) {
-  store.markWelcomed();
-  welcome();
-}
+// Pantalla inicial: programa configurado → Hoy; si falta la prueba de nivel → lanzarla; si no → Bienvenida.
+const p = store.profile;
+if (p.onboarded && p.calibration) go('hoy');
+else if (p.onboarded) sesion.start('calibracion');
+else go('bienvenida');

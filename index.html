@@ -4,253 +4,390 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gimnasio de Memoria</title>
-<meta name="description" content="Tres ejercicios cortos para entrenar la memoria: Pares, Secuencia y N-Back. Progreso guardado en tu navegador.">
+<meta name="description" content="Programa de entrenamiento de la memoria con tres ejercicios adaptativos: Pares, Secuencia y N-Back. Prueba de nivel, sesión diaria e índice de memoria.">
 <meta name="theme-color" content="#2a56e8">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<header class="top wrap">
-  <div class="in">
-    <button class="brand" data-go="home" aria-label="Ir al inicio"><span class="mark">GM</span><span>Gimnasio de Memoria</span></button>
-    <nav aria-label="Secciones">
-      <button data-go="home">Inicio</button>
-      <button data-go="pares">Pares</button>
-      <button data-go="secuencia">Secuencia</button>
-      <button data-go="nback">N-Back</button>
-      <button data-go="progreso">Progreso</button>
-      <button data-go="ajustes" aria-label="Ajustes" title="Ajustes">⚙</button>
-    </nav>
+<!-- ===================== FLUJO DE ENTRADA (pantalla completa, sin menú) ===================== -->
+
+<!-- Bienvenida -->
+<section class="view focus" id="v-bienvenida" hidden>
+  <div class="focus-in">
+    <div class="logo-big" aria-hidden="true">GM</div>
+    <h1>Hola</h1>
+    <p class="muted">Vamos a crear un programa de entrenamiento de memoria adaptado a ti.</p>
+    <h3 style="margin-top:22px">Comenzaremos con</h3>
+    <ol class="intro-steps">
+      <li><b class="n1">1</b><span>Tus objetivos</span></li>
+      <li><b class="n2">2</b><span>Tu nivel actual de memoria</span></li>
+      <li><b class="n3">3</b><span>Tu plan de entrenamiento</span></li>
+    </ol>
   </div>
-</header>
+  <div class="focus-foot"><button class="btn primary wide" id="b-start">Empecemos</button></div>
+</section>
 
-<main class="wrap" id="app">
+<!-- Asistente de configuración (5 pasos) -->
+<section class="view focus" id="v-config" hidden>
+  <div class="wizard-bar"><button class="icon-btn" id="w-back" aria-label="Atrás">←</button><div class="progress"><i id="w-progress"></i></div></div>
+  <div class="focus-in">
 
-  <!-- INICIO -->
-  <section class="view" id="v-home" hidden>
-    <div class="card pad-lg hero">
-      <p class="eyebrow" id="home-greet">Hola</p>
-      <h1>Tres ejercicios cortos para entrenar la memoria.</h1>
-      <p class="muted">Cada juego sube de dificultad según tu rendimiento y guarda tu progreso en este navegador. Una rutina completa dura unos cinco minutos.</p>
-      <div class="row" style="margin-top:8px">
-        <button class="btn primary" data-go="rutina">Rutina de hoy</button>
-        <span class="pill accent" id="home-streak" hidden></span>
+    <div class="wstep" data-step="0">
+      <h2>¿Cómo te llamas?</h2>
+      <p class="muted">Usaremos tu nombre para saludarte y llevar tu progreso en este navegador.</p>
+      <input id="w-name" class="input" type="text" maxlength="24" placeholder="Tu nombre" autocomplete="given-name">
+    </div>
+
+    <div class="wstep" data-step="1" hidden>
+      <h2>¿Qué te interesa más?</h2>
+      <p class="muted">Selecciona uno</p>
+      <div class="choices" id="w-goal">
+        <button data-value="entrenar">Quiero entrenar mi memoria</button>
+        <button data-value="mantener">Quiero mantener mi mente activa</button>
+        <button data-value="superar">Me gusta presionarme para mejorar</button>
+        <button data-value="explorar">Quiero explorar el gimnasio</button>
       </div>
     </div>
 
-    <div class="grid3">
-      <article class="gcard">
-        <span class="tag">Memoria visual a corto plazo</span>
-        <h2>Pares</h2>
-        <p class="muted">Mira el tablero unos segundos, luego encuentra las parejas en el menor número de intentos.</p>
-        <div class="stat"><span>Mejor nivel <b id="h-pares-best">–</b></span><span>Sesiones <b id="h-pares-n">0</b></span></div>
-        <div class="row"><button class="btn primary" data-go="pares">Jugar</button><button class="btn ghost small" data-help="pares">¿Cómo se juega?</button></div>
-      </article>
-      <article class="gcard">
-        <span class="tag">Amplitud visoespacial</span>
-        <h2>Secuencia</h2>
-        <p class="muted">Los bloques se encienden en orden. Repite el orden exacto, o al revés en el modo inverso.</p>
-        <div class="stat"><span>Mejor amplitud <b id="h-secuencia-best">–</b></span><span>Sesiones <b id="h-secuencia-n">0</b></span></div>
-        <div class="row"><button class="btn primary" data-go="secuencia">Jugar</button><button class="btn ghost small" data-help="secuencia">¿Cómo se juega?</button></div>
-      </article>
-      <article class="gcard">
-        <span class="tag">Memoria de trabajo</span>
-        <h2>N-Back</h2>
-        <p class="muted">Un cuadro aparece en una celda. Avisa cuando coincide con la posición de N turnos atrás.</p>
-        <div class="stat"><span>Mejor precisión <b id="h-nback-best">–</b></span><span>Sesiones <b id="h-nback-n">0</b></span></div>
-        <div class="row"><button class="btn primary" data-go="nback">Jugar</button><button class="btn ghost small" data-help="nback">¿Cómo se juega?</button></div>
-      </article>
-    </div>
-
-    <div class="card soft">
-      <div class="row between">
-        <div>
-          <h3>¿Por qué funciona?</h3>
-          <p class="muted" style="max-width:62ch">Cada ejercicio entrena un componente distinto de la memoria descrito por la psicología cognitiva: el almacén a corto plazo (Atkinson y Shiffrin), la amplitud de memoria inmediata (Miller) y la memoria de trabajo (Baddeley y Hitch). La dificultad se ajusta para mantenerte en el límite de tu capacidad.</p>
-        </div>
-        <button class="btn" data-go="planes">Ver planes</button>
+    <div class="wstep" data-step="2" hidden>
+      <h2>Memoria</h2>
+      <p class="muted">¿Qué aspectos de tu memoria te gustaría entrenar?</p>
+      <div class="checks" id="w-areas">
+        <label class="check on"><input type="checkbox" value="pares" checked><span class="box"></span><span><b>Memoria visual a corto plazo</b><small>Retener lo que ves durante unos segundos · Pares</small></span></label>
+        <label class="check on"><input type="checkbox" value="secuencia" checked><span class="box"></span><span><b>Memoria espacial</b><small>Memorizar y recordar ubicaciones y orden · Secuencia</small></span></label>
+        <label class="check on"><input type="checkbox" value="nback" checked><span class="box"></span><span><b>Memoria de trabajo</b><small>Mantener y actualizar información · N-Back</small></span></label>
       </div>
     </div>
-  </section>
 
-  <!-- RUTINA -->
-  <section class="view" id="v-rutina" hidden>
-    <div class="card">
-      <div class="ghead">
-        <h2>Rutina de hoy</h2>
-        <p class="muted">Tres ejercicios seguidos, uno por tipo de memoria. Al final obtienes un puntaje del día y sumas a tu racha.</p>
-      </div>
-      <ol class="steps" id="r-steps">
-        <li data-step="pares"><b>1</b><span>Pares</span><em>nivel actual</em></li>
-        <li data-step="secuencia"><b>2</b><span>Secuencia</span><em>hasta fallar</em></li>
-        <li data-step="nback"><b>3</b><span>N-Back</span><em>20 turnos</em></li>
-      </ol>
-      <div id="r-summary" hidden></div>
-      <div class="row" style="margin-top:16px">
-        <button class="btn primary" id="r-start">Empezar rutina</button>
-        <button class="btn ghost" data-go="home">Volver</button>
+    <div class="wstep" data-step="3" hidden>
+      <div class="brain-art" aria-hidden="true"><span>●</span><span>■</span><span>▲</span><span>◆</span><span>★</span><span>✚</span><span>⬢</span><span>◐</span><span>✦</span></div>
+      <h2 class="center">La memoria se entrena como un músculo</h2>
+      <p class="muted center" style="max-width:40ch;margin:0 auto">Ejercítala a diario: unos minutos cada día bastan para crear un hábito. La dificultad se ajusta sola para mantenerte cerca de tu límite.</p>
+    </div>
+
+    <div class="wstep" data-step="4" hidden>
+      <h2>¿En qué rango de edad estás?</h2>
+      <p class="muted">Sirve para comparar tu nivel con valores de referencia de tu edad.</p>
+      <div class="choices" id="w-age">
+        <button data-value="menos18">Menos de 18</button>
+        <button data-value="18-24">18 a 24</button>
+        <button data-value="25-34">25 a 34</button>
+        <button data-value="35-44">35 a 44</button>
+        <button data-value="45-59">45 a 59</button>
+        <button data-value="60+">60 o más</button>
       </div>
     </div>
-  </section>
 
-  <!-- PARES -->
-  <section class="view" id="v-pares" hidden>
-    <div class="card">
-      <div class="ghead row between">
-        <div><h2>Pares</h2><p class="muted">Memoriza el tablero mientras está destapado. Luego voltea dos cartas por intento.</p></div>
-        <button class="btn ghost small" data-help="pares">Ayuda</button>
-      </div>
-      <div class="hud">
-        <div><span class="k">Nivel</span><span class="v" id="p-level">1</span></div>
-        <div><span class="k">Intentos</span><span class="v" id="p-moves">0</span></div>
-        <div><span class="k">Parejas</span><span class="v" id="p-pairs">0/6</span></div>
-        <div><span class="k">Tiempo</span><span class="v" id="p-time">0:00</span></div>
-      </div>
-      <div class="board" id="p-board" aria-label="Tablero de cartas"></div>
-      <p class="msg" id="p-msg" aria-live="polite"></p>
-      <div class="stars" id="p-stars" aria-hidden="true"></div>
-      <div class="row">
-        <button class="btn primary" id="p-start">Empezar</button>
-        <button class="btn primary" id="p-next" hidden>Siguiente nivel</button>
-        <button class="btn" id="p-retry" hidden>Repetir nivel</button>
-        <button class="btn ghost" id="p-reset">Nivel 1</button>
+    <div class="wstep" data-step="5" hidden>
+      <h2>¿Qué nivel de dificultad prefieres?</h2>
+      <div class="choices rich" id="w-diff">
+        <button data-value="estandar"><i>⚡</i><span><b>Estándar (recomendado)</b><small>Quiero equilibrar diversión y dificultad.</small></span></button>
+        <button data-value="avanzado"><i>⚡⚡</i><span><b>Avanzado</b><small>Estoy aquí para emplearme a fondo.</small></span></button>
       </div>
     </div>
-  </section>
 
-  <!-- SECUENCIA -->
-  <section class="view" id="v-secuencia" hidden>
-    <div class="card">
-      <div class="ghead row between">
-        <div><h2>Secuencia</h2><p class="muted">Observa el orden en que se encienden los bloques y repítelo. Tienes un segundo intento por longitud.</p></div>
-        <button class="btn ghost small" data-help="secuencia">Ayuda</button>
-      </div>
-      <div class="row between" style="margin-bottom:10px">
-        <div class="seg" id="s-mode" role="group" aria-label="Modo">
-          <button aria-pressed="true" data-mode="directo">Directo</button>
-          <button aria-pressed="false" data-mode="inverso">Inverso</button>
-        </div>
-        <span class="pill" id="s-tries" hidden></span>
-      </div>
-      <div class="hud">
-        <div><span class="k">Longitud</span><span class="v" id="s-len">3</span></div>
-        <div><span class="k">Amplitud lograda</span><span class="v" id="s-span">0</span></div>
-        <div><span class="k">Estado</span><span class="v" id="s-state">Listo</span></div>
-      </div>
-      <div class="corsi" id="s-grid" aria-label="Cuadrícula de bloques"></div>
-      <p class="msg" id="s-msg" aria-live="polite"></p>
-      <div class="row">
-        <button class="btn primary" id="s-start">Empezar</button>
-      </div>
+  </div>
+  <div class="focus-foot"><button class="btn primary wide" id="w-next">Continuar</button></div>
+</section>
+
+<!-- Prueba de nivel / sesión diaria: tarjeta de intro y de resultado por juego -->
+<section class="view focus" id="v-sesion" hidden>
+  <div class="stepper" id="s-stepper"></div>
+  <div class="focus-in">
+    <div class="hero-card" id="s-intro">
+      <div class="hero-art" id="s-art"></div>
+      <h1 id="s-title">Pares</h1>
+      <p id="s-desc"></p>
+      <button class="btn primary" id="s-go">Comenzar</button>
     </div>
-  </section>
+    <div class="hero-card result" id="s-result" hidden>
+      <div class="hero-art small" id="s-art2"></div>
+      <h2 id="s-rtitle"></h2>
+      <p class="muted" id="s-rdesc"></p>
+      <div class="score-big"><span class="l">Puntaje</span><span class="n" id="s-rscore">0</span><span class="muted small" id="s-rdetail"></span></div>
+      <button class="btn primary" id="s-next">Continuar</button>
+    </div>
+  </div>
+</section>
 
-  <!-- N-BACK -->
-  <section class="view" id="v-nback" hidden>
-    <div class="card">
-      <div class="ghead row between">
-        <div><h2>N-Back espacial</h2><p class="muted">Cada 2,5 segundos aparece un cuadro. Pulsa <b>Coincide</b> (o la barra espaciadora) cuando la posición sea la misma que hace N turnos.</p></div>
-        <button class="btn ghost small" data-help="nback">Ayuda</button>
-      </div>
-      <div class="row between" style="margin-bottom:12px">
-        <div class="row" style="gap:8px"><span class="muted" style="font-weight:700">N =</span>
-          <div class="seg" id="n-seg" role="group" aria-label="Valor de N">
-            <button aria-pressed="false" data-n="1">1</button>
-            <button aria-pressed="true" data-n="2">2</button>
-            <button aria-pressed="false" data-n="3">3</button>
-            <button aria-pressed="false" data-n="4">4</button>
+<!-- Resultados de la prueba de nivel -->
+<section class="view focus" id="v-resultados" hidden>
+  <div class="focus-in wide">
+    <h1 class="center">Resultados de tu prueba de nivel</h1>
+    <p class="muted center" id="r-sub">Tu índice de memoria inicial en cada área (0 a 100).</p>
+    <div class="result-grid" id="r-grid"></div>
+    <div class="im-card"><span class="l">Índice de Memoria global</span><span class="n" id="r-global">0</span><span class="muted small" id="r-ref"></span></div>
+  </div>
+  <div class="focus-foot"><button class="btn primary wide" id="r-next">Continuar</button></div>
+</section>
+
+<!-- Plan de 30 días -->
+<section class="view focus" id="v-plan" hidden>
+  <div class="focus-in">
+    <div class="plan-art" aria-hidden="true"><svg viewBox="0 0 200 90" width="200" height="90"><polyline points="10,75 50,62 90,50 130,32 180,14" fill="none" stroke="var(--ok)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="180" cy="14" r="6" fill="var(--ok)"/><circle cx="10" cy="75" r="5" fill="var(--accent)"/></svg></div>
+    <h1 class="center">Plan de 30 días: tu camino a seguir</h1>
+    <p class="muted center" style="max-width:44ch;margin:0 auto">Si entrenas unos minutos cada día, tu meta es subir tu Índice de Memoria un <b id="p-pct">25 %</b> en un mes.</p>
+    <div class="tablewrap" style="margin-top:18px"><table class="plan-table"><thead><tr><th>Área</th><th>Línea base</th><th>Meta en 30 días</th></tr></thead><tbody id="p-rows"></tbody></table></div>
+    <p class="muted small center" style="margin-top:12px">La meta es un objetivo de práctica, no una predicción. El índice mide tu desempeño en estos ejercicios.</p>
+  </div>
+  <div class="focus-foot"><button class="btn primary wide" id="p-next">Ir a mi panel</button></div>
+</section>
+
+<!-- ===================== APLICACIÓN (con menú lateral) ===================== -->
+<div class="app" id="app" hidden>
+  <aside class="side">
+    <button class="brand" data-go="hoy"><span class="mark">GM</span><span>Gimnasio de Memoria</span></button>
+    <nav aria-label="Secciones">
+      <button data-go="hoy"><i>☀</i><span>Hoy</span></button>
+      <button data-go="juegos"><i>▦</i><span>Juegos</span></button>
+      <button data-go="progreso"><i>📈</i><span>Mi progreso</span></button>
+      <button data-go="ajustes"><i>⚙</i><span>Ajustes</span></button>
+    </nav>
+    <div class="side-foot"><span class="pill accent" id="side-streak" hidden></span></div>
+  </aside>
+
+  <main class="wrap">
+
+    <!-- HOY -->
+    <section class="view" id="v-hoy" hidden>
+      <h1 id="hoy-greet">Buenos días</h1>
+      <div class="hoy-grid">
+        <div class="col">
+          <div class="card session-card">
+            <div class="ring" id="hoy-ring"><span class="mark">GM</span></div>
+            <div class="session-info">
+              <h2>Sesión de entrenamiento diaria</h2>
+              <p class="muted" id="hoy-date"></p>
+              <button class="btn primary" id="hoy-start">Comenzar</button>
+              <p class="pill ok" id="hoy-done" hidden>Sesión de hoy completada</p>
+            </div>
+            <div class="session-games">
+              <h3 class="sub" style="margin-top:0">Ejercicios de hoy</h3>
+              <div class="mini-games" id="hoy-games"></div>
+            </div>
+          </div>
+          <div class="card soft">
+            <div class="row between">
+              <div><h3>Más entrenamiento</h3><p class="muted">Juega cualquier ejercicio por separado cuando quieras.</p></div>
+              <button class="btn" data-go="juegos">Ver juegos</button>
+            </div>
           </div>
         </div>
-        <span class="pill warn" id="n-reco" hidden></span>
-      </div>
-      <div class="hud">
-        <div><span class="k">Turno</span><span class="v" id="n-trial">0/20</span></div>
-        <div><span class="k">Aciertos</span><span class="v" id="n-hits">0</span></div>
-        <div><span class="k">Omisiones</span><span class="v" id="n-miss">0</span></div>
-        <div><span class="k">Falsas alarmas</span><span class="v" id="n-fa">0</span></div>
-      </div>
-      <div class="nb" id="n-grid" aria-label="Cuadrícula de estímulos"></div>
-      <div class="trialbar" aria-hidden="true"><i id="n-bar"></i></div>
-      <div class="nbctrl">
-        <button class="btn primary big" id="n-match" disabled>Coincide</button>
-        <button class="btn" id="n-start">Empezar</button>
-      </div>
-      <p class="msg center" id="n-msg" aria-live="polite"></p>
-    </div>
-  </section>
-
-  <!-- PROGRESO -->
-  <section class="view" id="v-progreso" hidden>
-    <div class="card">
-      <div class="ghead"><h2>Progreso</h2><p class="muted">Resumen de tus sesiones. Las barras muestran las últimas diez; la más reciente va en verde.</p></div>
-      <div class="kpis4" id="pg-top"></div>
-      <div class="pgrid" id="pg-cards"></div>
-      <h3 class="sub">Logros</h3>
-      <div class="badges" id="pg-badges"></div>
-      <h3 class="sub">Historial reciente</h3>
-      <div class="tablewrap"><table id="pg-table"><thead><tr><th>Fecha</th><th>Juego</th><th>Resultado</th><th>Detalle</th></tr></thead><tbody></tbody></table></div>
-    </div>
-  </section>
-
-  <!-- PLANES -->
-  <section class="view" id="v-planes" hidden>
-    <div class="card">
-      <div class="ghead"><h2>Planes</h2><p class="muted">El entrenamiento básico es gratis. El plan Pro añade seguimiento avanzado y más ejercicios.</p></div>
-      <div class="plans">
-        <div class="plan">
-          <span class="tag">Gratis</span><h3>Entrenamiento básico</h3><p class="price">S/ 0</p>
-          <ul><li>Pares, Secuencia y N-Back</li><li>Rutina diaria y racha</li><li>Progreso en este dispositivo</li><li>Sin anuncios</li></ul>
-          <button class="btn" disabled>Plan actual</button>
-        </div>
-        <div class="plan pro">
-          <span class="tag">Pro</span><h3>Entrenamiento completo</h3><p class="price">S/ 9.90 <small>/ mes</small></p>
-          <ul><li>Todo lo del plan gratis</li><li>Progreso sincronizado en la nube</li><li>Informe semanal y comparación por edad</li><li>Ejercicios adicionales: ¿Qué cambió?, Palacio de la memoria</li><li>Modo familia (hasta 4 perfiles)</li></ul>
-          <button class="btn primary" id="pl-pro">Me interesa</button>
+        <div class="col">
+          <div class="card">
+            <div class="row between"><h3>Historial de entrenamiento</h3><span class="pill accent" id="hoy-streak">🔥 0</span></div>
+            <div class="calendar" id="hoy-cal"></div>
+            <p class="muted small" id="hoy-calnote"></p>
+          </div>
+          <div class="card">
+            <div class="row between"><h3>Índice de Memoria actual</h3><b class="im-global" id="hoy-im">–</b></div>
+            <p class="muted small" style="margin-bottom:10px">Promedio de tus últimas sesiones en cada área (0–100).</p>
+            <div class="im-bars" id="hoy-bars"></div>
+          </div>
         </div>
       </div>
-      <p class="muted small" style="margin-top:14px">Planes para instituciones educativas y centros de adulto mayor: licencia por asientos con panel de seguimiento.</p>
-    </div>
-  </section>
+    </section>
 
-  <!-- AJUSTES -->
-  <section class="view" id="v-ajustes" hidden>
-    <div class="card">
-      <div class="ghead"><h2>Ajustes</h2></div>
-      <div class="form">
-        <label for="a-name">Tu nombre</label>
-        <div class="row"><input id="a-name" type="text" maxlength="24" placeholder="Nombre"><button class="btn small" id="a-save-name">Guardar</button></div>
-
-        <label>Sonido</label>
-        <div class="row"><label class="switch"><input type="checkbox" id="a-sound"><span></span></label><span class="muted">Efectos y tonos de los bloques</span></div>
-
-        <label for="a-vol">Volumen</label>
-        <input id="a-vol" type="range" min="0" max="100" step="5">
-
-        <label>Tema</label>
-        <div class="seg" id="a-theme" role="group" aria-label="Tema">
-          <button aria-pressed="true" data-theme="system">Sistema</button>
-          <button aria-pressed="false" data-theme="light">Claro</button>
-          <button aria-pressed="false" data-theme="dark">Oscuro</button>
+    <!-- JUEGOS (biblioteca) -->
+    <section class="view" id="v-juegos" hidden>
+      <h1>Juegos</h1>
+      <p class="muted">Tres ejercicios, uno por cada componente de la memoria. Cada uno sube de dificultad según tu rendimiento.</p>
+      <div class="grid3">
+        <article class="gcard">
+          <span class="tag">Memoria visual a corto plazo</span>
+          <h2>Pares</h2>
+          <p class="muted">Mira el tablero unos segundos, luego encuentra las parejas en el menor número de intentos.</p>
+          <div class="stat"><span>Mejor nivel <b id="h-pares-best">–</b></span><span>Sesiones <b id="h-pares-n">0</b></span></div>
+          <div class="row"><button class="btn primary" data-go="pares">Jugar</button><button class="btn ghost small" data-help="pares">¿Cómo se juega?</button></div>
+        </article>
+        <article class="gcard">
+          <span class="tag">Memoria espacial</span>
+          <h2>Secuencia</h2>
+          <p class="muted">Los bloques se encienden en orden. Repite el orden exacto, o al revés en el modo inverso.</p>
+          <div class="stat"><span>Mejor amplitud <b id="h-secuencia-best">–</b></span><span>Sesiones <b id="h-secuencia-n">0</b></span></div>
+          <div class="row"><button class="btn primary" data-go="secuencia">Jugar</button><button class="btn ghost small" data-help="secuencia">¿Cómo se juega?</button></div>
+        </article>
+        <article class="gcard">
+          <span class="tag">Memoria de trabajo</span>
+          <h2>N-Back</h2>
+          <p class="muted">Un cuadro aparece en una celda. Avisa cuando coincide con la posición de N turnos atrás.</p>
+          <div class="stat"><span>Mejor precisión <b id="h-nback-best">–</b></span><span>Sesiones <b id="h-nback-n">0</b></span></div>
+          <div class="row"><button class="btn primary" data-go="nback">Jugar</button><button class="btn ghost small" data-help="nback">¿Cómo se juega?</button></div>
+        </article>
+      </div>
+      <div class="card soft">
+        <div class="row between">
+          <div>
+            <h3>¿Por qué funciona?</h3>
+            <p class="muted" style="max-width:62ch">Cada ejercicio entrena un componente distinto de la memoria descrito por la psicología cognitiva: el almacén a corto plazo (Atkinson y Shiffrin), la amplitud de memoria inmediata (Miller) y la memoria de trabajo (Baddeley y Hitch).</p>
+          </div>
+          <button class="btn" data-go="planes">Ver planes</button>
         </div>
+      </div>
+    </section>
 
-        <label>Datos</label>
+    <!-- PARES -->
+    <section class="view" id="v-pares" hidden>
+      <div class="card">
+        <div class="ghead row between">
+          <div><h2>Pares</h2><p class="muted">Memoriza el tablero mientras está destapado. Luego voltea dos cartas por intento.</p></div>
+          <div class="row"><button class="btn ghost small" data-help="pares">Ayuda</button><button class="btn ghost small" data-go="juegos" id="p-exit">Salir</button></div>
+        </div>
+        <div class="hud">
+          <div><span class="k">Nivel</span><span class="v" id="p-level">1</span></div>
+          <div><span class="k">Intentos</span><span class="v" id="p-moves">0</span></div>
+          <div><span class="k">Parejas</span><span class="v" id="p-pairs">0/6</span></div>
+          <div><span class="k">Tiempo</span><span class="v" id="p-time">0:00</span></div>
+        </div>
+        <div class="board" id="p-board" aria-label="Tablero de cartas"></div>
+        <p class="msg" id="p-msg" aria-live="polite"></p>
+        <div class="stars" id="p-stars" aria-hidden="true"></div>
         <div class="row">
-          <button class="btn ghost small" id="a-clear">Borrar todo el progreso</button>
-        </div>
-        <div class="confirm" id="a-confirm" hidden>
-          <span>Se borrará tu nombre, ajustes e historial de este navegador.</span>
-          <button class="btn small danger" id="a-yes">Sí, borrar</button>
-          <button class="btn ghost small" id="a-no">Cancelar</button>
+          <button class="btn primary" id="p-start">Empezar</button>
+          <button class="btn primary" id="p-next" hidden>Siguiente nivel</button>
+          <button class="btn" id="p-retry" hidden>Repetir nivel</button>
+          <button class="btn ghost" id="p-reset">Nivel 1</button>
         </div>
       </div>
-      <p class="muted small" style="margin-top:18px">Versión 1.1 · Los datos se guardan solo en este navegador (localStorage). No se envía nada a ningún servidor.</p>
-    </div>
-  </section>
+    </section>
 
-</main>
+    <!-- SECUENCIA -->
+    <section class="view" id="v-secuencia" hidden>
+      <div class="card">
+        <div class="ghead row between">
+          <div><h2>Secuencia</h2><p class="muted">Observa el orden en que se encienden los bloques y repítelo. Tienes un segundo intento por longitud.</p></div>
+          <div class="row"><button class="btn ghost small" data-help="secuencia">Ayuda</button><button class="btn ghost small" data-go="juegos">Salir</button></div>
+        </div>
+        <div class="row between" style="margin-bottom:10px">
+          <div class="seg" id="s-mode" role="group" aria-label="Modo">
+            <button aria-pressed="true" data-mode="directo">Directo</button>
+            <button aria-pressed="false" data-mode="inverso">Inverso</button>
+          </div>
+          <span class="pill" id="s-tries" hidden></span>
+        </div>
+        <div class="hud">
+          <div><span class="k">Longitud</span><span class="v" id="s-len">3</span></div>
+          <div><span class="k">Amplitud lograda</span><span class="v" id="s-span">0</span></div>
+          <div><span class="k">Estado</span><span class="v" id="s-state">Listo</span></div>
+        </div>
+        <div class="corsi" id="s-grid" aria-label="Cuadrícula de bloques"></div>
+        <p class="msg" id="s-msg" aria-live="polite"></p>
+        <div class="row"><button class="btn primary" id="s-start">Empezar</button></div>
+      </div>
+    </section>
 
-<footer class="wrap">Gimnasio de Memoria · HTML, CSS y JavaScript sin dependencias · Progreso guardado localmente.</footer>
+    <!-- N-BACK -->
+    <section class="view" id="v-nback" hidden>
+      <div class="card">
+        <div class="ghead row between">
+          <div><h2>N-Back espacial</h2><p class="muted">Cada 2,5 segundos aparece un cuadro. Pulsa <b>Coincide</b> (o la barra espaciadora) cuando la posición sea la misma que hace N turnos.</p></div>
+          <div class="row"><button class="btn ghost small" data-help="nback">Ayuda</button><button class="btn ghost small" data-go="juegos">Salir</button></div>
+        </div>
+        <div class="row between" style="margin-bottom:12px">
+          <div class="row" style="gap:8px"><span class="muted" style="font-weight:700">N =</span>
+            <div class="seg" id="n-seg" role="group" aria-label="Valor de N">
+              <button aria-pressed="false" data-n="1">1</button>
+              <button aria-pressed="true" data-n="2">2</button>
+              <button aria-pressed="false" data-n="3">3</button>
+              <button aria-pressed="false" data-n="4">4</button>
+            </div>
+          </div>
+          <span class="pill warn" id="n-reco" hidden></span>
+        </div>
+        <div class="hud">
+          <div><span class="k">Turno</span><span class="v" id="n-trial">0/20</span></div>
+          <div><span class="k">Aciertos</span><span class="v" id="n-hits">0</span></div>
+          <div><span class="k">Omisiones</span><span class="v" id="n-miss">0</span></div>
+          <div><span class="k">Falsas alarmas</span><span class="v" id="n-fa">0</span></div>
+        </div>
+        <div class="nb" id="n-grid" aria-label="Cuadrícula de estímulos"></div>
+        <div class="trialbar" aria-hidden="true"><i id="n-bar"></i></div>
+        <div class="nbctrl">
+          <button class="btn primary big" id="n-match" disabled>Coincide</button>
+          <button class="btn" id="n-start">Empezar</button>
+        </div>
+        <p class="msg center" id="n-msg" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- PROGRESO -->
+    <section class="view" id="v-progreso" hidden>
+      <h1>Mi progreso</h1>
+      <div class="card">
+        <div class="kpis4" id="pg-top"></div>
+        <h3 class="sub">Índice de Memoria</h3>
+        <div class="im-bars" id="pg-im"></div>
+        <h3 class="sub">Por juego</h3>
+        <div class="pgrid" id="pg-cards"></div>
+        <h3 class="sub">Logros</h3>
+        <div class="badges" id="pg-badges"></div>
+        <h3 class="sub">Historial reciente</h3>
+        <div class="tablewrap"><table id="pg-table"><thead><tr><th>Fecha</th><th>Juego</th><th>Resultado</th><th>Detalle</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- PLANES -->
+    <section class="view" id="v-planes" hidden>
+      <h1>Planes</h1>
+      <div class="card">
+        <p class="muted" style="margin-bottom:14px">El entrenamiento básico es gratis. El plan Pro añade seguimiento avanzado y más ejercicios.</p>
+        <div class="plans">
+          <div class="plan">
+            <span class="tag">Gratis</span><h3>Entrenamiento básico</h3><p class="price">S/ 0</p>
+            <ul><li>Pares, Secuencia y N-Back</li><li>Prueba de nivel, sesión diaria y racha</li><li>Progreso en este dispositivo</li><li>Sin anuncios</li></ul>
+            <button class="btn" disabled>Plan actual</button>
+          </div>
+          <div class="plan pro">
+            <span class="tag">Pro</span><h3>Entrenamiento completo</h3><p class="price">S/ 9.90 <small>/ mes</small></p>
+            <ul><li>Todo lo del plan gratis</li><li>Progreso sincronizado en la nube</li><li>Informe semanal y comparación por edad</li><li>Ejercicios adicionales: ¿Qué cambió?, Palacio de la memoria</li><li>Modo familia (hasta 4 perfiles)</li></ul>
+            <button class="btn primary" id="pl-pro">Me interesa</button>
+          </div>
+        </div>
+        <p class="muted small" style="margin-top:14px">Planes para instituciones educativas y centros de adulto mayor: licencia por asientos con panel de seguimiento.</p>
+      </div>
+    </section>
+
+    <!-- AJUSTES -->
+    <section class="view" id="v-ajustes" hidden>
+      <h1>Ajustes</h1>
+      <div class="card">
+        <div class="form">
+          <label for="a-name">Tu nombre</label>
+          <div class="row"><input id="a-name" type="text" maxlength="24" placeholder="Nombre"><button class="btn small" id="a-save-name">Guardar</button></div>
+
+          <label>Programa</label>
+          <div class="row"><button class="btn small" id="a-recal">Repetir prueba de nivel</button><button class="btn ghost small" id="a-reconfig">Volver a configurar</button></div>
+          <p class="muted small" id="a-profile"></p>
+
+          <label>Sonido</label>
+          <div class="row"><label class="switch"><input type="checkbox" id="a-sound"><span></span></label><span class="muted">Efectos y tonos de los bloques</span></div>
+
+          <label for="a-vol">Volumen</label>
+          <input id="a-vol" type="range" min="0" max="100" step="5">
+
+          <label>Tema</label>
+          <div class="seg" id="a-theme" role="group" aria-label="Tema">
+            <button aria-pressed="true" data-theme="system">Sistema</button>
+            <button aria-pressed="false" data-theme="light">Claro</button>
+            <button aria-pressed="false" data-theme="dark">Oscuro</button>
+          </div>
+
+          <label>Datos</label>
+          <div class="row"><button class="btn ghost small" id="a-clear">Borrar todo el progreso</button><button class="btn ghost small" data-go="planes">Ver planes</button></div>
+          <div class="confirm" id="a-confirm" hidden>
+            <span>Se borrará tu nombre, configuración e historial de este navegador.</span>
+            <button class="btn small danger" id="a-yes">Sí, borrar</button>
+            <button class="btn ghost small" id="a-no">Cancelar</button>
+          </div>
+        </div>
+        <p class="muted small" style="margin-top:18px">Versión 2.0 · Los datos se guardan solo en este navegador (localStorage). No se envía nada a ningún servidor.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
 
 <!-- Modal genérico -->
 <div class="modal" id="modal" hidden>

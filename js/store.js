@@ -4,7 +4,7 @@
 const KEY = 'gimnasio-memoria.v2';
 
 const DEFAULTS = () => ({
-  profile: { name: '', createdAt: Date.now() },
+  profile: { name: '', createdAt: Date.now(), onboarded: false, goal: '', areas: ['pares', 'secuencia', 'nback'], ageRange: '', difficulty: 'estandar', calibration: null },
   settings: { sound: true, volume: 60, theme: 'system', nbackN: 2, paresLevel: 1 },
   sessions: [],
   routines: []
@@ -19,6 +19,7 @@ function load() {
     const raw = localStorage.getItem(KEY);
     cache = raw ? { ...DEFAULTS(), ...JSON.parse(raw) } : DEFAULTS();
     cache.settings = { ...DEFAULTS().settings, ...cache.settings };
+    cache.profile = { ...DEFAULTS().profile, ...cache.profile };
   } catch (e) {
     cache = DEFAULTS();
   }
@@ -40,6 +41,7 @@ export const store = {
   onChange(fn) { listeners.add(fn); return () => listeners.delete(fn); },
 
   setName(name) { load().profile.name = String(name || '').trim().slice(0, 24); save(); },
+  setProfile(patch) { Object.assign(load().profile, patch); save(); },
   setSetting(k, v) { load().settings[k] = v; save(); },
 
   /** Guarda una sesión de juego. s.game ∈ pares|secuencia|nback */
@@ -54,7 +56,7 @@ export const store = {
 
   byGame(g) { return load().sessions.filter(s => s.game === g); },
 
-  /** Guarda el resultado de una rutina diaria (puntaje 0-100). */
+  /** Guarda el resultado de una sesión diaria (puntaje 0-100); una por día. */
   addRoutine(r) {
     const d = load();
     r.t = Date.now();
@@ -64,7 +66,9 @@ export const store = {
     return r;
   },
 
-  /** Racha: días consecutivos (hasta hoy o ayer) con al menos una rutina. */
+  trainedToday() { return load().routines.some(r => r.day === dayKey(Date.now())); },
+
+  /** Racha: días consecutivos (hasta hoy o ayer) con al menos una sesión diaria. */
   streak() {
     const days = new Set(load().routines.map(r => r.day));
     if (!days.size) return 0;

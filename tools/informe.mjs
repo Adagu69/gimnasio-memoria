@@ -63,14 +63,14 @@ children.push(
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 1800, after: 200 }, children: [new TextRun({ text: 'UNIVERSIDAD TECNOLÓGICA DEL PERÚ', font: FONT, size: 26, bold: true, color: '5D6782' })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 1200 }, children: [new TextRun({ text: 'Curso: Desarrollo de Videojuegos', font: FONT, size: 22, color: '5D6782' })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: 'GIMNASIO DE MEMORIA', font: FONT, size: 56, bold: true, color: ACCENT })] }),
-  new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 1400 }, children: [new TextRun({ text: 'Aplicación web para reforzar la memoria con tres ejercicios adaptativos, fundamentada en la psicología cognitiva y desarrollada bajo los principios de calidad total de W. Edwards Deming', font: FONT, size: 24, italics: true, color: '17203A' })] }),
+  new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 1400 }, children: [new TextRun({ text: 'Programa web de entrenamiento de la memoria: prueba de nivel, sesión diaria y tres ejercicios adaptativos, fundamentado en la psicología cognitiva y desarrollado bajo los principios de calidad total de W. Edwards Deming', font: FONT, size: 24, italics: true, color: '17203A' })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 120 }, children: [new TextRun({ text: 'Informe final del trabajo', font: FONT, size: 22, bold: true })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: 'Integrantes:', font: FONT, size: 22 })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: 'Adriel Gudiel Urquizo', font: FONT, size: 22 })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: '[Integrante 2]', font: FONT, size: 22, color: 'C97D12' })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 600 }, children: [new TextRun({ text: '[Integrante 3]', font: FONT, size: 22, color: 'C97D12' })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: 'Juego en línea: ', font: FONT, size: 22 }), link(URL_JUEGO, URL_JUEGO)] }),
-  new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'Lima, octubre de 2026', font: FONT, size: 22 })] }),
+  new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'Lima, noviembre de 2026', font: FONT, size: 22 })] }),
   pb()
 );
 
@@ -84,15 +84,20 @@ children.push(
 
 // 1 Título
 children.push(H1('1. Título'),
-  P([B('Gimnasio de Memoria: '), R('aplicación web para reforzar la memoria mediante tres ejercicios adaptativos (Pares, Secuencia y N-Back), fundamentada en la psicología cognitiva y desarrollada bajo los principios de calidad total de W. Edwards Deming.')]));
+  P([B('Gimnasio de Memoria: '), R('programa web de entrenamiento de la memoria con prueba de nivel, sesión diaria e índice de memoria, basado en tres ejercicios adaptativos (Pares, Secuencia y N-Back), fundamentado en la psicología cognitiva y desarrollado bajo los principios de calidad total de W. Edwards Deming.')]));
 
 // 2 Descripción
 children.push(H1('2. Descripción'),
-  P('Gimnasio de Memoria es una aplicación web gratuita, sin instalación, que entrena tres componentes de la memoria descritos por la psicología cognitiva. Cada componente tiene su propio minijuego, y los tres comparten una misma interfaz, un sistema de progreso y una regla de dificultad adaptativa que mantiene al jugador cerca del límite de su capacidad:'),
+  P('Gimnasio de Memoria es una aplicación web gratuita, sin instalación, que organiza el entrenamiento de la memoria como un programa personal, siguiendo la estructura de las plataformas comerciales de entrenamiento cognitivo (ver sección 5) en una versión simplificada:'),
+  num('Bienvenida y configuración: el usuario indica su nombre, su objetivo, las áreas de memoria que quiere entrenar, su rango de edad y la dificultad que prefiere.', 'nums3'),
+  num('Prueba de nivel: juega una vez cada ejercicio, con una tarjeta de introducción que explica qué capacidad se pone a prueba y una tarjeta de resultado que la interpreta. Al final obtiene su Índice de Memoria inicial por área y global.', 'nums3'),
+  num('Plan de 30 días: a partir de la línea base se fija una meta de práctica (+25 % o +35 % según la dificultad).', 'nums3'),
+  num('Panel "Hoy": sesión de entrenamiento diaria con los ejercicios del programa, calendario de días entrenados con racha, e Índice de Memoria actual por área.', 'nums3'),
+  P('Los tres ejercicios entrenan componentes distintos de la memoria descritos por la psicología cognitiva y comparten una regla de dificultad adaptativa que mantiene al jugador cerca del límite de su capacidad:'),
   bullet([B('Pares '), R('(memoria visual a corto plazo). El tablero se muestra destapado unos segundos para que el jugador codifique la posición de cada símbolo; luego se tapa y hay que encontrar las parejas en el menor número de intentos. Ocho niveles, de 4×3 a 8×6 cartas; se otorgan estrellas según la eficiencia.')]),
-  bullet([B('Secuencia '), R('(amplitud visoespacial, adaptación de la tarea de bloques de Corsi). Nueve bloques se encienden en un orden que el jugador debe repetir, en modo directo o inverso. Comienza con tres bloques; cada acierto añade uno y se permiten dos intentos por longitud. La amplitud (span) es la longitud más larga superada.')]),
+  bullet([B('Secuencia '), R('(memoria espacial, adaptación de la tarea de bloques de Corsi). Nueve bloques se encienden en un orden que el jugador debe repetir, en modo directo o inverso. Comienza con tres bloques; cada acierto añade uno y se permiten dos intentos por longitud. La amplitud (span) es la longitud más larga superada.')]),
   bullet([B('N-Back espacial '), R('(memoria de trabajo). Un estímulo aparece cada 2,5 s en una de nueve celdas; el jugador avisa cuando la posición coincide con la de N turnos atrás (N de 1 a 4). Se registran aciertos, omisiones y falsas alarmas; con precisión ≥ 85 % el juego sube N y con menos de 60 % lo baja.')]),
-  P('Complementan el entrenamiento una Rutina de hoy (los tres ejercicios encadenados, con un puntaje diario de 0 a 100 y una racha de días), un panel de Progreso con historial, gráficos y nueve logros, ayuda contextual que explica la base teórica de cada ejercicio, ajustes de nombre, sonido y tema (claro/oscuro) y una vista de Planes que materializa el modelo de negocio freemium. El progreso se guarda en el navegador (localStorage), sin enviar datos a ningún servidor.'),
+  P('Complementan el programa una biblioteca de juegos para practicar libremente, un panel de progreso con historial, gráficos y diez logros, ayuda contextual que explica la base teórica de cada ejercicio, ajustes (nombre, sonido, tema claro/oscuro, repetir la prueba de nivel) y una vista de Planes que materializa el modelo de negocio freemium. El progreso se guarda en el navegador (localStorage), sin enviar datos a ningún servidor.'),
   P([R('La aplicación está publicada en '), link(URL_JUEGO, URL_JUEGO), R(' y su código fuente editable (HTML, CSS y JavaScript en módulos, sin dependencias) acompaña a este informe.')]));
 
 // 3 Objetivos
@@ -102,7 +107,8 @@ children.push(H1('3. Objetivo general y objetivos específicos'),
   H2('3.2 Objetivos específicos'),
   num('Fundamentar cada ejercicio en un modelo o tarea reconocida de la psicología de la memoria (Atkinson y Shiffrin, Miller, Baddeley y Hitch; tareas de Corsi y N-Back).'),
   num('Implementar tres minijuegos con dificultad adaptativa y métricas de desempeño medibles (eficiencia, amplitud, precisión).'),
-  num('Registrar el progreso del usuario en el dispositivo y presentarlo en un panel con historial, gráficos y logros que fomenten la constancia (rutina diaria y racha).'),
+  num('Estructurar el entrenamiento como un programa personal: prueba de nivel inicial, índice de memoria por área, meta a 30 días y sesión diaria con calendario y racha.'),
+  num('Registrar el progreso del usuario en el dispositivo y presentarlo en un panel con historial, gráficos y logros que fomenten la constancia.'),
   num('Aplicar el ciclo PDCA y los 14 puntos de Deming al proceso de desarrollo, con pruebas automatizadas y verificación de cada entrega.'),
   num('Publicar el juego en un servidor remoto, con sus archivos editables, capturas y video demostrativo, y formular un modelo de negocio sostenible para su distribución.'));
 
@@ -138,13 +144,14 @@ children.push(H1('5. Estado del arte'),
     ['Plataforma', 'Web y móvil', 'Web y móvil', 'Web y móvil', 'Web (cualquier navegador), sin instalación'],
     ['Número de ejercicios', '> 50', '> 30', '> 30', '3 (enfocados en memoria) + rutina diaria'],
     ['Base teórica explícita al usuario', 'Parcial', 'Parcial', 'Parcial', 'Sí: ayuda de cada juego cita el modelo que ejercita'],
+    ['Estructura del programa', 'Objetivos → prueba de nivel → plan → sesión diaria; índice LPI', 'Evaluación inicial → entrenamiento personalizado', 'Evaluación → plan → sesiones', 'Objetivos → prueba de nivel → plan de 30 días → sesión diaria; Índice de Memoria (0–100)'],
     ['Adaptación de dificultad', 'Sí', 'Sí', 'Sí', 'Sí: por nivel, por longitud y por N (regla 85 %/60 %)'],
     ['Precio', 'Suscripción (≈ US$ 12/mes)', 'Suscripción (≈ US$ 20/mes)', 'Suscripción (≈ € 10/mes)', 'Gratis; plan Pro S/ 9.90/mes'],
     ['Datos del usuario', 'Servidor del proveedor', 'Servidor del proveedor', 'Servidor del proveedor', 'Solo en el dispositivo (sin registro)'],
     ['Idioma y contexto', 'Español disponible', 'Español disponible', 'Alemán/Inglés principalmente', 'Español nativo, precios en soles']
   ], [1900, 1800, 1800, 1800, 2060]),
   spacer(),
-  P('El proyecto no pretende competir en catálogo con estas plataformas, sino ocupar un nicho: una herramienta ligera, gratuita, en español, transparente en su fundamento teórico y respetuosa de la privacidad, con un camino de monetización coherente con el mercado latinoamericano.'));
+  P('El proyecto toma de estas plataformas la estructura de programa (objetivos, prueba de nivel, plan y sesión diaria) como precedente de diseño, en una versión simplificada, y no pretende competir en catálogo con ellas, sino ocupar un nicho: una herramienta ligera, gratuita, en español, transparente en su fundamento teórico y respetuosa de la privacidad, con un camino de monetización coherente con el mercado latinoamericano.'));
 
 // 6 Justificación
 children.push(H1('6. Justificación'),
@@ -182,9 +189,9 @@ children.push(pb(), H1('8. Desarrollo'),
   spacer(),
   P('Pila tecnológica: HTML5, CSS3 (variables, grid, backdrop-filter, curvas linear()) y JavaScript en módulos ES, sin frameworks ni librerías en tiempo de ejecución. Web Audio API para el sonido (tonos sintetizados, sin archivos), Vibration API para la respuesta háptica en móviles y localStorage para el progreso. Herramientas de desarrollo: esbuild (empaquetado a un solo archivo), Playwright (pruebas de punta a punta, capturas y video) y Vercel (hosting estático).'),
   H2('8.2 Arquitectura'),
-  ...img('docs/diseno/arquitectura.png', 16, 'Figura 1. Arquitectura del sistema: capa de presentación, capa de lógica (módulos de juego y adaptación), servicios del navegador y publicación.'),
-  ...img('docs/diseno/flujo-pantallas.png', 16, 'Figura 2. Flujo de pantallas y bucle de juego: cada ronda recorre el ciclo planificar (nivel) → hacer (jugar) → verificar (métrica) → actuar (adaptar).'),
-  P('La aplicación es una página única. Un enrutador muestra una vista a la vez y avisa a los módulos cuando se entra o se sale de ella (para detener un juego en curso o cancelar una rutina). Los tres minijuegos exponen la misma interfaz (init, start con un callback de fin, stop), lo que permite que la rutina diaria los encadene sin conocer su interior. Un almacén central guarda perfil, ajustes, sesiones y rutinas, y notifica cambios para que el inicio y los logros se actualicen.'),
+  ...img('docs/diseno/arquitectura.png', 16, 'Figura 1. Arquitectura del sistema (v2.0): flujo de entrada y aplicación, módulos de lógica, servicios del navegador, calidad y publicación.'),
+  ...img('docs/diseno/flujo-pantallas.png', 16, 'Figura 2. Flujo de pantallas (v2.0): primera vez (configuración, prueba de nivel, resultados, plan) y uso diario (Hoy, sesión diaria, juegos, progreso, ajustes).'),
+  P('La aplicación es una página única con dos tipos de vistas: las de pantalla completa del flujo de entrada (bienvenida, configuración, prueba de nivel, resultados y plan) y las de la aplicación con menú lateral (Hoy, Juegos, Mi progreso, Ajustes). Un enrutador muestra una vista a la vez y avisa a los módulos cuando se entra o se sale de ella (para detener un juego en curso o cancelar una sesión). Los tres minijuegos exponen la misma interfaz (init, start con un callback de fin, stop), lo que permite que el módulo de sesión los encadene, tanto en la prueba de nivel como en la sesión diaria, con una tarjeta de introducción y otra de resultado por juego. Un almacén central guarda perfil (objetivo, áreas, edad, dificultad, prueba de nivel), ajustes, sesiones y sesiones diarias, y el módulo de índice calcula el Índice de Memoria a partir de las últimas tres sesiones de cada área.'),
   H2('8.3 Estructura del código'),
   ...code([
     'index.html            Página única con todas las vistas',
@@ -194,12 +201,16 @@ children.push(pb(), H1('8. Desarrollo'),
     'js/store.js           Persistencia: perfil, ajustes, sesiones, rutinas, racha',
     'js/audio.js           Tonos sintetizados (Web Audio)',
     'js/ui.js              Modal anclado a su origen, toast, formato, háptica',
+    'js/indice.js          Índice de Memoria: normalización, índice por área y global, meta a 30 días',
     'js/games/pares.js     Pares: 8 niveles, fase de memorización, estrellas',
     'js/games/secuencia.js Secuencia: Corsi directo/inverso, 2 intentos por longitud',
     'js/games/nback.js     N-Back: 20 turnos, regla adaptativa 85 % / 60 %',
-    'js/views/*.js         Inicio, rutina, progreso y logros, ajustes, ayuda',
+    'js/views/config.js    Bienvenida y asistente de configuración (6 pasos)',
+    'js/views/sesion.js    Prueba de nivel y sesión diaria: intro → juego → resultado por cada ejercicio',
+    'js/views/hoy.js       Panel Hoy: sesión diaria, calendario con racha, índice por área',
+    'js/views/*.js         Juegos, progreso y logros, ajustes, ayuda',
     'tools/build.mjs       Empaqueta todo en un solo HTML',
-    'tools/test.mjs        Prueba de punta a punta (30 comprobaciones)',
+    'tools/test.mjs        Prueba de punta a punta (39 comprobaciones)',
     'tools/capturas.mjs    Genera las capturas; tools/video.mjs graba el video'
   ]),
   spacer(),
@@ -234,10 +245,18 @@ children.push(pb(), H1('8. Desarrollo'),
     "store.setSetting('nbackN', nextN);"
   ]),
   spacer(),
-  H3('Rutina diaria y puntaje'),
-  P('El puntaje del día promedia tres medidas normalizadas a 0–100: la eficiencia de Pares, la amplitud de Secuencia sobre 8 y la precisión de N-Back ponderada por N (×0,7 para N = 1 hasta ×1,1 para N = 4). La racha cuenta días consecutivos con al menos una rutina y se mantiene viva si la última fue ayer.'),
-  H2('8.5 Diseño de la interfaz (versión 1.1)'),
-  P('La segunda iteración de interfaz aplicó los principios de interfaces fluidas de Apple (Designing Fluid Interfaces, WWDC 2018) traducidos a la web:'),
+  H3('Índice de Memoria, prueba de nivel y sesión diaria'),
+  P('Cada sesión se normaliza a 0–100: la eficiencia de Pares, la amplitud de Secuencia sobre 8 y la precisión de N-Back ponderada por N (×0,7 para N = 1 hasta ×1,1 para N = 4). El índice de un área es el promedio de sus últimas tres sesiones y el índice global, el promedio de las áreas del programa. La prueba de nivel registra la línea base; el plan fija como meta subirla un 25 % (estándar) o un 35 % (avanzado). La sesión diaria encadena los ejercicios del programa y guarda un puntaje por día; la racha cuenta días consecutivos con sesión y se mantiene viva si la última fue ayer.'),
+  ...code([
+    'export function areaIndex(game, n = 3) {',
+    '  const last = store.byGame(game).slice(-n);',
+    '  return last.length ? Math.round(last.reduce((a, s) => a + normalize(s), 0) / last.length) : null;',
+    '}',
+    "export function goal(v) { return Math.min(100, Math.round(v * (1 + goalPct() / 100))); }"
+  ]),
+  spacer(),
+  H2('8.5 Diseño de la interfaz'),
+  P('La versión 2.0 reorganizó la aplicación como un programa de entrenamiento tomando como precedente el flujo de las plataformas revisadas en el estado del arte: pantallas de pantalla completa para el flujo de entrada (bienvenida, asistente de configuración con barra de progreso, prueba de nivel con stepper y tarjeta protagonista por juego, resultados con curva de distribución y plan de 30 días) y un panel con menú lateral para el uso diario (Hoy, Juegos, Mi progreso, Ajustes), que en teléfonos se convierte en barra inferior. La iteración anterior (1.1) había aplicado los principios de interfaces fluidas de Apple (Designing Fluid Interfaces, WWDC 2018) traducidos a la web, que se mantienen:'),
   bullet([B('Respuesta inmediata: '), R('todos los controles reaccionan al bajar el puntero (pointer-down), no al soltar; en N-Back el acierto se registra en ese instante, lo que reduce la latencia de respuesta.')]),
   bullet([B('Comportamiento sobre animación: '), R('las transiciones usan curvas de resorte expresadas con la función CSS linear() (razón de amortiguación 1,0 por defecto; 0,72 solo en celebraciones: estrellas, logros, racha).')]),
   bullet([B('Interrupción: '), R('solo se animan transform y opacity con transiciones CSS, que parten del valor actual y pueden revertirse a mitad de camino sin saltos.')]),
@@ -245,24 +264,28 @@ children.push(pb(), H1('8. Desarrollo'),
   bullet([B('Tipografía: '), R('fuente del sistema (SF en Apple, Segoe en Windows), tracking negativo en títulos grandes y positivo en etiquetas pequeñas, cifras tabulares en todos los indicadores.')]),
   bullet([B('Accesibilidad: '), R('se respetan prefers-reduced-motion (fundidos en lugar de resortes), prefers-reduced-transparency (superficies sólidas) y prefers-contrast (bordes definidos); foco visible y regiones aria-live para los mensajes.')]),
   H2('8.6 Pruebas'),
-  P('Una prueba automatizada con Playwright (tools/test.mjs) juega los tres minijuegos leyendo el estado del DOM, ejecuta una rutina completa y verifica el guardado. Comprende 30 comprobaciones, entre ellas: el nombre se guarda y aparece en el saludo; Pares muestra la fase de memorización, otorga 3 estrellas con intentos mínimos y avanza de nivel; Secuencia alcanza amplitud 5 y termina tras dos errores en la misma longitud; N-Back alcanza 100 % de precisión jugando perfecto, recomienda subir a N = 3 y lo guarda; el progreso lista 4 sesiones y desbloquea logros; la rutina abre los tres juegos en orden, calcula el puntaje y la racha; se guardan 7 sesiones y 1 rutina; borrar progreso vacía el almacén; y no hay errores de consola. La prueba se ejecuta tras cada cambio (ver sección 9).'),
+  P('Una prueba automatizada con Playwright (tools/test.mjs) recorre el flujo completo leyendo el estado del DOM: bienvenida y configuración (exige el nombre, marca las tres áreas), prueba de nivel con los tres juegos (tarjetas de introducción y resultado, amplitud 5 en Secuencia, N-Back perfecto), resultados (tres áreas e índice global), plan (tres áreas más el global), panel Hoy (saludo por nombre, índice actual), sesión diaria completa (resumen, marca del día, racha de 1, calendario y ejercicios hechos), cancelación de una sesión al navegar, juego libre con el N recomendado, progreso (6 sesiones, logros, barras del índice), persistencia tras recargar y borrado desde ajustes. Comprende 39 comprobaciones y exige cero errores de consola. La prueba se ejecuta tras cada cambio (ver sección 9).'),
   H2('8.7 Publicación'),
   P([R('El juego se publicó como sitio estático en Vercel en '), link(URL_JUEGO, URL_JUEGO), R('. Tras cada despliegue se compara el hash SHA-1 de cada archivo publicado con el de los archivos que pasaron las pruebas, de modo que lo que está en línea es exactamente lo verificado. El código fuente editable se entrega como repositorio Git.')]),
   H2('8.8 Pantallazos de la funcionalidad'));
 
 const caps = [
-  ['02-inicio.png', 'Figura 3. Inicio: saludo, rutina de hoy, tarjetas de los tres ejercicios con mejor marca y sesiones.'],
-  ['04-pares-memorizar.png', 'Figura 4. Pares, fase de memorización: el tablero se muestra destapado con cuenta regresiva.'],
-  ['06-pares-completado.png', 'Figura 5. Pares completado: intentos, tiempo, eficiencia y estrellas; se desbloquea el siguiente nivel.'],
-  ['08-secuencia-correcto.png', 'Figura 6. Secuencia: respuesta correcta y aumento de la longitud.'],
-  ['10-nback-jugando.png', 'Figura 7. N-Back espacial en juego: estímulo, contadores y barra de turnos.'],
-  ['11-nback-resultado.png', 'Figura 8. N-Back terminado: precisión y recomendación de N para la próxima sesión.'],
-  ['13-progreso.png', 'Figura 9. Progreso: indicadores globales, tarjetas por juego, logros e historial.'],
-  ['14-planes.png', 'Figura 10. Planes: materialización del modelo de negocio freemium.'],
-  ['16-inicio-oscuro.png', 'Figura 11. Tema oscuro.'],
-  ['17-movil-inicio.png', 'Figura 12. Vista en teléfono (390 px de ancho).']
+  ['01-bienvenida.png', 'Figura 3. Bienvenida: los tres pasos del programa (objetivos, nivel actual, plan).'],
+  ['03-config-areas.png', 'Figura 4. Configuración: áreas de memoria que se entrenarán (cada una ligada a un ejercicio).'],
+  ['06-prueba-intro-pares.png', 'Figura 5. Prueba de nivel: tarjeta de introducción de Pares con el stepper de la prueba.'],
+  ['07-pares-memorizar.png', 'Figura 6. Pares, fase de memorización: el tablero se muestra destapado con cuenta regresiva.'],
+  ['09-prueba-resultado-pares.png', 'Figura 7. Tarjeta de resultado: interpreta la capacidad evaluada y muestra el puntaje.'],
+  ['11-secuencia-correcto.png', 'Figura 8. Secuencia: respuesta correcta y aumento de la longitud.'],
+  ['12-nback-jugando.png', 'Figura 9. N-Back espacial en juego: estímulo, contadores y barra de turnos.'],
+  ['14-resultados-prueba-nivel.png', 'Figura 10. Resultados de la prueba de nivel: índice por área e Índice de Memoria global.'],
+  ['15-plan-30-dias.png', 'Figura 11. Plan de 30 días: línea base y meta por área.'],
+  ['18-hoy-completado.png', 'Figura 12. Panel Hoy con la sesión diaria completada, calendario con racha e índice actual.'],
+  ['19-progreso.png', 'Figura 13. Mi progreso: índice frente a la línea base, tarjetas por juego, logros e historial.'],
+  ['22-planes.png', 'Figura 14. Planes: materialización del modelo de negocio freemium.'],
+  ['24-hoy-oscuro.png', 'Figura 15. Tema oscuro.'],
+  ['26-movil-hoy.png', 'Figura 16. Vista en teléfono (390 px de ancho) con barra de navegación inferior.']
 ];
-for (const [f, c] of caps) children.push(...img('docs/capturas/' + f, f.startsWith('17') ? 7 : 15, c));
+for (const [f, c] of caps) children.push(...img('docs/capturas/' + f, f.startsWith('26') ? 7 : 15, c));
 
 // 9 Calidad total
 children.push(pb(), H1('9. Principios de calidad total: W. Edwards Deming'),
@@ -272,7 +295,8 @@ children.push(pb(), H1('9. Principios de calidad total: W. Edwards Deming'),
     ['1. Planificación', 'Lluvia de ideas (8 mecánicas), criterios: base teórica, esfuerzo, demostrabilidad', 'Matriz de decisión; elección de Web + JavaScript', 'Revisión contra los entregables del curso (URL, editables, video)', 'Idea elegida: tres minijuegos con una interfaz común'],
     ['2. Prototipo (Avance 1)', 'Un solo archivo HTML con los tres juegos y progreso', 'Desarrollo del prototipo; publicación como artefacto', 'Revisión visual en escritorio y móvil', 'Reestructurar en módulos; añadir rutina, logros y ajustes'],
     ['3. Versión 1.0', 'Arquitectura modular, fase de memorización, modo inverso, N adaptativo, rutina diaria', 'Implementación en 15 módulos; empaquetador', 'Prueba automatizada de 30 comprobaciones; se detectó y corrigió un defecto del empaquetador ($$ interpretado como patrón)', 'Despliegue en Vercel; hashes verificados; capturas y video'],
-    ['4. Versión 1.1', 'Rediseño con principios de interfaces fluidas; respuesta en pointer-down; accesibilidad', 'Nueva hoja de estilos, resortes, materiales, háptica', 'Las 30 comprobaciones siguen pasando; revisión en tema claro, oscuro y móvil', 'Regeneración de capturas y video; informe final']
+    ['4. Versión 1.1', 'Rediseño con principios de interfaces fluidas; respuesta en pointer-down; accesibilidad', 'Nueva hoja de estilos, resortes, materiales, háptica', 'Las 30 comprobaciones siguen pasando; revisión en tema claro, oscuro y móvil', 'Regeneración de capturas y video; informe'],
+    ['5. Versión 2.0', 'Reestructurar como programa de entrenamiento tomando como precedente las plataformas del estado del arte: configuración, prueba de nivel, índice, plan y sesión diaria', 'Nuevos módulos config, sesion, hoy e indice; menú lateral; 7 pantallas nuevas', 'Prueba ampliada a 39 comprobaciones; revisión en escritorio, móvil y tema oscuro', 'Capturas y video del nuevo flujo; informe final actualizado']
   ], [1500, 2200, 2000, 2000, 1660]),
   spacer(),
   P('Dentro del juego, cada ronda también es un ciclo PDCA: la regla de adaptación planifica el nivel, el jugador lo ejecuta, la métrica lo verifica y la recomendación actúa sobre la siguiente sesión. Así el principio de mejora continua no solo gobernó el desarrollo sino que está codificado en la mecánica.'),
@@ -280,7 +304,7 @@ children.push(pb(), H1('9. Principios de calidad total: W. Edwards Deming'),
   table(['Punto de Deming', 'Aplicación en el proyecto'], [
     ['1. Constancia en el propósito de mejorar', 'Un objetivo estable en todas las iteraciones: ejercitar la memoria con ejercicios fundamentados; cada versión mejora sobre la anterior sin cambiar el propósito.'],
     ['3. Dejar de depender de la inspección masiva; construir la calidad desde el principio', 'La prueba automatizada se escribió junto con el código y se ejecuta en cada cambio; los módulos exponen una interfaz común que evita errores de integración.'],
-    ['5. Mejorar constantemente el sistema de producción y servicio', 'Cuatro iteraciones PDCA documentadas; el empaquetador, las capturas y el video se generan con scripts repetibles, no a mano.'],
+    ['5. Mejorar constantemente el sistema de producción y servicio', 'Cinco iteraciones PDCA documentadas; el empaquetador, las capturas, el video y este informe se generan con scripts repetibles, no a mano.'],
     ['6. Instituir la capacitación', 'La ayuda de cada minijuego enseña al usuario qué ejercita y por qué; el código está comentado para que cualquier integrante pueda continuarlo.'],
     ['9. Derribar las barreras entre departamentos', 'Diseño, código y pruebas se trabajaron juntos: la hoja de estilos documenta los principios de diseño y la prueba verifica el comportamiento que el diseño promete.'],
     ['10. Eliminar lemas y exhortaciones; 11. Eliminar cuotas numéricas', 'No se fijaron metas de "líneas de código" ni fechas por encima de la calidad; el criterio de terminado fue que las 30 comprobaciones pasaran y que lo publicado coincidiera con lo probado.'],
@@ -293,9 +317,10 @@ children.push(pb(), H1('9. Principios de calidad total: W. Edwards Deming'),
 // 10 Conclusiones
 children.push(H1('10. Conclusiones'),
   num2('Se diseñó y desarrolló una aplicación web funcional que ejercita tres componentes de la memoria con mecánicas tomadas de tareas experimentales reconocidas (parejas con codificación previa, bloques de Corsi y N-Back), cada una vinculada a un modelo teórico: Atkinson y Shiffrin, Miller, y Baddeley y Hitch.'),
+  num2('Estructurar la aplicación como un programa (configuración, prueba de nivel, índice de memoria, plan y sesión diaria), siguiendo el precedente de las plataformas comerciales en una versión simplificada, convierte tres minijuegos sueltos en un entrenamiento con línea base, meta y seguimiento, que es lo que da sentido a la medición del progreso.'),
   num2('La elección de JavaScript sobre Unity permitió llegar a un prototipo demostrable en horas, publicar un sitio de 60 KB sin instalación y entregar archivos editables en texto plano; para un juego 2D de cartas y cuadrículas fue la decisión correcta.'),
   num2('La dificultad adaptativa (niveles, longitud y N) mantiene al jugador cerca de su límite, condición que la literatura identifica como necesaria para que el entrenamiento tenga efecto en las tareas practicadas.'),
-  num2('Aplicar el ciclo PDCA de Deming estructuró el trabajo en cuatro iteraciones verificables; la prueba automatizada detectó un defecto real antes de publicar y la comparación de hashes garantizó que lo publicado fuera lo probado. La calidad se construyó en el proceso, no se inspeccionó al final.'),
+  num2('Aplicar el ciclo PDCA de Deming estructuró el trabajo en cinco iteraciones verificables; la prueba automatizada detectó un defecto real antes de publicar y la comparación de hashes garantizó que lo publicado fuera lo probado. La calidad se construyó en el proceso, no se inspeccionó al final.'),
   num2('El rediseño de la interfaz con principios de interfaces fluidas mejoró la respuesta percibida (realimentación en pointer-down), la coherencia espacial y la accesibilidad sin añadir dependencias.'),
   num2('El modelo freemium con un plan Pro en soles y licencias institucionales es coherente con el nicho identificado en el estado del arte: una herramienta gratuita, en español y respetuosa de la privacidad.'),
   num2('Como trabajo futuro quedan la validación con usuarios reales (pre y post test de amplitud), la sincronización en la nube para el plan Pro y los ejercicios adicionales (¿Qué cambió?, Palacio de la memoria). Las afirmaciones sobre beneficios se mantienen dentro de lo que la evidencia respalda: mejora en las tareas entrenadas.'));
@@ -324,11 +349,11 @@ children.push(H1('11. Bibliografía (norma APA, 7.ª edición)'),
 children.push(pb(), H1('Anexo A. Enlaces y entregables'),
   bullet([B('Juego en línea: '), link(URL_JUEGO, URL_JUEGO)]),
   bullet([B('Archivos editables: '), R('carpeta gimnasio-memoria (repositorio Git) con index.html, css/, js/, tools/ y docs/.')]),
-  bullet([B('Capturas: '), R('docs/capturas/ (18 imágenes PNG, escritorio, móvil y tema oscuro).')]),
-  bullet([B('Video demostrativo: '), R('docs/video/demo.mp4 (una partida completa de los tres ejercicios y el panel de progreso).')]),
+  bullet([B('Capturas: '), R('docs/capturas/ (27 imágenes PNG: flujo de entrada, prueba de nivel, panel, móvil y tema oscuro).')]),
+  bullet([B('Video demostrativo: '), R('docs/video/demo.mp4 (configuración, prueba de nivel completa, resultados, plan, panel Hoy y progreso).')]),
   bullet([B('Prueba automatizada: '), R('tools/test.mjs — ejecutar con npm test tras npm install.')]),
   H1('Anexo B. Cómo ejecutar y desplegar'),
-  ...code(['npm install          # instala esbuild y Playwright (solo para build y pruebas)', 'npm start            # sirve la carpeta en http://localhost:5173', 'npm run build        # genera dist/index.html (un solo archivo)', 'npm test             # ejecuta las 30 comprobaciones', 'npm run capturas     # regenera docs/capturas', 'npm run video        # regenera docs/video/demo.webm']),
+  ...code(['npm install          # instala esbuild y Playwright (solo para build y pruebas)', 'npm start            # sirve la carpeta en http://localhost:5173', 'npm run build        # genera dist/index.html (un solo archivo)', 'npm test             # ejecuta las 39 comprobaciones', 'npm run capturas     # regenera docs/capturas', 'npm run video        # regenera docs/video/demo.webm']),
   spacer(),
   P('Despliegue en Vercel: importar el repositorio de GitHub en vercel.com (framework: Other, sin comando de build, directorio de salida: raíz) o arrastrar la carpeta del proyecto en el panel. Cada push a la rama principal publica una nueva versión.'));
 
@@ -347,6 +372,7 @@ const doc = new Document({
   numbering: {
     config: [
       { reference: 'bullets', levels: [{ level: 0, format: LevelFormat.BULLET, text: '•', alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 720, hanging: 360 } } } }, { level: 1, format: LevelFormat.BULLET, text: '–', alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 1440, hanging: 360 } } } }] },
+      { reference: 'nums3', levels: [{ level: 0, format: LevelFormat.DECIMAL, text: '%1.', alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 720, hanging: 360 } } } }] },
       { reference: 'nums2', levels: [{ level: 0, format: LevelFormat.DECIMAL, text: '%1.', alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 720, hanging: 360 } } } }] },
       { reference: 'nums', levels: [{ level: 0, format: LevelFormat.DECIMAL, text: '%1.', alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 720, hanging: 360 } } } }] }
     ]

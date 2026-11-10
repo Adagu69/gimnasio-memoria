@@ -1,5 +1,6 @@
-// video.mjs — graba un video demostrativo (webm) de una partida completa con Playwright.
-// Convertir a MP4:  ffmpeg -i docs/video/demo.webm -c:v libx264 -pix_fmt yuv420p -movflags +faststart docs/video/demo.mp4
+// video.mjs — graba un video demostrativo (webm) del flujo v2: bienvenida → configuración →
+// prueba de nivel → resultados → plan → Hoy → progreso. Convertir a MP4:
+//   ffmpeg -i docs/video/demo.webm -c:v libx264 -pix_fmt yuv420p -movflags +faststart docs/video/demo.mp4
 import { chromium } from 'playwright';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
@@ -9,15 +10,10 @@ const url = pathToFileURL(resolve('dist/index.html')).href;
 const dir = 'docs/video';
 mkdirSync(dir, { recursive: true });
 
-const browser = await chromium.launch();
-const ctx = await browser.newContext({
-  viewport: { width: 1280, height: 800 },
-  recordVideo: { dir, size: { width: 1280, height: 800 } },
-  locale: 'es-PE'
-});
+const browser = await chromium.launch(process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {});
+const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, recordVideo: { dir, size: { width: 1280, height: 800 } }, locale: 'es-PE' });
 const page = await ctx.newPage();
 const pause = ms => page.waitForTimeout(ms);
-// Cursor visible para que se entienda dónde se hace clic
 await page.addInitScript(() => {
   window.addEventListener('DOMContentLoaded', () => {
     const c = document.createElement('div');
@@ -35,101 +31,83 @@ async function click(sel) {
   await pause(250);
   await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
 }
+async function installSeqRecorder() {
+  await page.evaluate(() => {
+    if (window.__seqInstalled) return; window.__seqInstalled = true; window.__seq = [];
+    const blocks = Array.from(document.querySelectorAll('#s-grid .block'));
+    new MutationObserver(() => { blocks.forEach((b, i) => { if (b.classList.contains('lit') && window.__seq[window.__seq.length - 1] !== i) window.__seq.push(i); }); })
+      .observe(document.querySelector('#s-grid'), { attributes: true, subtree: true, attributeFilter: ['class'] });
+    new MutationObserver(() => { if (document.querySelector('#s-state').textContent === 'Observa') window.__seq = []; })
+      .observe(document.querySelector('#s-state'), { childList: true, characterData: true, subtree: true });
+  });
+}
+const waitTurn = () => page.waitForFunction(() => document.querySelector('#s-state').textContent === 'Tu turno', null, { timeout: 30000 });
 
-await page.goto(url);
-await pause(1500);
-await page.type('#w-name', 'Adriel', { delay: 120 });
-await pause(600);
-await click('#modal-actions .primary');
-await pause(1800);
+await page.goto(url); await pause(1800);
+await click('#b-start'); await pause(900);
+await page.type('#w-name', 'Adriel', { delay: 120 }); await pause(500); await click('#w-next'); await pause(900);
+await click('#w-goal [data-value="entrenar"]'); await pause(1200);
+await click('#w-next'); await pause(1600);
+await click('#w-next'); await pause(900);
+await click('#w-age [data-value="25-34"]'); await pause(1000);
+await click('#w-diff [data-value="estandar"]'); await pause(1800);
 
-// Ayuda
-await click('#v-home [data-help="pares"]');
-await pause(2600);
-await click('#modal-actions .primary');
-await pause(600);
-
-// Pares
-await click('nav [data-go="pares"]');
-await pause(900);
-await click('#p-start');
-await page.waitForSelector('#p-board:not(.preview)');
-await pause(500);
+// Prueba de nivel: Pares
+await click('#s-go'); await page.waitForSelector('#p-board:not(.preview)'); await pause(400);
 {
   const cards = await page.$$('#p-board .cardp');
   const syms = await Promise.all(cards.map(c => c.getAttribute('data-s')));
   const seen = {};
-  // dos fallos "humanos" al inicio para que se vea el volteo
-  await click(`#p-board .cardp:nth-child(1)`); await pause(350);
+  await click('#p-board .cardp:nth-child(1)'); await pause(350);
   const other = syms.findIndex((s, i) => i > 0 && s !== syms[0]);
   await click(`#p-board .cardp:nth-child(${other + 1})`); await pause(1100);
   for (let i = 0; i < syms.length; i++) {
-    if (seen[syms[i]] !== undefined) {
-      await click(`#p-board .cardp:nth-child(${seen[syms[i]] + 1})`); await pause(300);
-      await click(`#p-board .cardp:nth-child(${i + 1})`); await pause(700);
-    } else seen[syms[i]] = i;
+    if (seen[syms[i]] !== undefined) { await click(`#p-board .cardp:nth-child(${seen[syms[i]] + 1})`); await pause(300); await click(`#p-board .cardp:nth-child(${i + 1})`); await pause(700); }
+    else seen[syms[i]] = i;
   }
 }
-await page.waitForSelector('#p-msg.ok');
-await pause(2500);
+await page.waitForSelector('#s-result:not([hidden])'); await pause(2600);
+await click('#s-next'); await pause(1500);
 
 // Secuencia
-await click('nav [data-go="secuencia"]');
-await pause(800);
-await page.evaluate(() => {
-  window.__seq = [];
-  const blocks = Array.from(document.querySelectorAll('#s-grid .block'));
-  new MutationObserver(() => { blocks.forEach((b, i) => { if (b.classList.contains('lit') && window.__seq[window.__seq.length - 1] !== i) window.__seq.push(i); }); })
-    .observe(document.querySelector('#s-grid'), { attributes: true, subtree: true, attributeFilter: ['class'] });
-  new MutationObserver(() => { if (document.querySelector('#s-state').textContent === 'Observa') window.__seq = []; })
-    .observe(document.querySelector('#s-state'), { childList: true, characterData: true, subtree: true });
-});
-await click('#s-start');
-const waitTurn = () => page.waitForFunction(() => document.querySelector('#s-state').textContent === 'Tu turno', null, { timeout: 30000 });
+await click('#s-go'); await installSeqRecorder();
 for (let r = 0; r < 3; r++) {
   await waitTurn(); await pause(400);
   const seq = await page.evaluate(() => window.__seq.slice());
   for (const i of seq) { await click(`#s-grid .block:nth-child(${i + 1})`); await pause(380); }
   await pause(1400);
 }
-// error intencional ×2 para mostrar el reintento y el fin
 for (let k = 0; k < 2; k++) {
   await waitTurn(); await pause(500);
   const seq = await page.evaluate(() => window.__seq.slice());
-  const wrong = [0, 1, 2, 3, 4, 5, 6, 7, 8].find(i => i !== seq[0]);
-  await click(`#s-grid .block:nth-child(${wrong + 1})`);
-  await pause(1600);
+  await click(`#s-grid .block:nth-child(${[0, 1, 2, 3, 4, 5, 6, 7, 8].find(i => i !== seq[0]) + 1})`); await pause(1600);
 }
-await pause(1500);
+await page.waitForSelector('#s-result:not([hidden])'); await pause(2600);
+await click('#s-next'); await pause(1500);
 
 // N-Back
-await click('nav [data-go="nback"]');
-await pause(900);
-await click('#n-start');
+await click('#s-go'); await page.waitForSelector('#n-start:has-text("Detener")');
 {
-  const hist = [];
+  const N = +(await page.$eval('#n-seg [aria-pressed="true"]', b => b.dataset.n)); const hist = [];
   while (await page.evaluate(() => document.querySelector('#n-start').textContent !== 'Empezar')) {
     const on = await page.$$eval('#n-grid .cell', cs => cs.findIndex(c => c.classList.contains('on')));
     if (on >= 0 && (hist.length === 0 || hist[hist.length - 1].idx !== on || Date.now() - hist[hist.length - 1].t > 2000)) {
       hist.push({ idx: on, t: Date.now() }); const k = hist.length - 1;
-      if (k >= 2 && hist[k].idx === hist[k - 2].idx) { await pause(500); await click('#n-match'); }
+      if (k >= N && hist[k].idx === hist[k - N].idx) { await pause(500); await click('#n-match'); }
     }
     await pause(100);
   }
 }
-await pause(2500);
-
-// Progreso y cierre
-await click('nav [data-go="progreso"]');
-await pause(2200);
+await page.waitForSelector('#s-result:not([hidden])'); await pause(2600);
+await click('#s-next'); await pause(3200);           // resultados
+await click('#r-next'); await pause(3200);           // plan
+await click('#p-next'); await pause(3000);           // hoy
+await click('.side nav [data-go="progreso"]'); await pause(2200);
 await page.mouse.wheel(0, 500); await pause(1800);
-await page.mouse.wheel(0, 600); await pause(1800);
-await click('nav [data-go="home"]');
-await pause(1500);
-await click('#v-home [data-go="planes"]');
-await pause(2200);
-await click('nav [data-go="home"]');
-await pause(1500);
+await click('.side nav [data-go="juegos"]'); await pause(1800);
+await click('#v-juegos [data-help="secuencia"]'); await pause(2600);
+await click('#modal-actions .primary'); await pause(600);
+await click('.side nav [data-go="hoy"]'); await pause(2000);
 
 await ctx.close();
 await browser.close();

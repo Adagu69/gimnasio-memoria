@@ -1,7 +1,7 @@
 {
   "name": "gimnasio-memoria",
-  "version": "1.1.0",
-  "description": "Aplicación web para entrenar la memoria: Pares, Secuencia (Corsi) y N-Back, con rutina diaria y progreso local.",
+  "version": "2.0.0",
+  "description": "Programa web de entrenamiento de la memoria: prueba de nivel, sesión diaria e índice de memoria con tres ejercicios adaptativos (Pares, Secuencia, N-Back).",
   "private": true,
   "type": "module",
   "scripts": {

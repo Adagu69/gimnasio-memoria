@@ -1,6 +1,8 @@
 // progreso.js — panel de progreso: indicadores globales, tarjeta por juego, logros e historial.
 import { $, bars, avg, fmtDate } from '../ui.js';
 import { store } from '../store.js';
+import { globalIndex } from '../indice.js';
+import { renderImBars } from './hoy.js';
 
 export const ACHIEVEMENTS = [
   { id: 'primera', icon: '✓', name: 'Primera sesión', desc: 'Completa cualquier ejercicio', test: d => d.sessions.length >= 1 },
@@ -10,8 +12,9 @@ export const ACHIEVEMENTS = [
   { id: 'span6', icon: '6', name: 'Amplitud 6', desc: 'Secuencia de 6 bloques', test: d => d.sessions.some(s => s.game === 'secuencia' && s.span >= 6) },
   { id: 'inverso', icon: '↺', name: 'Al revés', desc: 'Amplitud 4 en modo inverso', test: d => d.sessions.some(s => s.game === 'secuencia' && s.mode === 'inverso' && s.span >= 4) },
   { id: 'nback3', icon: 'N3', name: 'Memoria de trabajo', desc: 'N-Back con N = 3 y precisión ≥ 85 %', test: d => d.sessions.some(s => s.game === 'nback' && s.n >= 3 && s.acc >= 85) },
-  { id: 'rutina', icon: '▶', name: 'Rutina completa', desc: 'Termina una rutina del día', test: d => d.routines.length >= 1 },
-  { id: 'racha3', icon: '🔥', name: 'Racha de 3', desc: 'Tres días seguidos de rutina', test: () => store.streak() >= 3 }
+  { id: 'rutina', icon: '▶', name: 'Sesión completa', desc: 'Termina una sesión diaria', test: d => d.routines.length >= 1 },
+  { id: 'nivel', icon: '◎', name: 'Prueba de nivel', desc: 'Completa la prueba de nivel inicial', test: d => !!d.profile.calibration },
+  { id: 'racha3', icon: '🔥', name: 'Racha de 3', desc: 'Tres días seguidos de sesión', test: () => store.streak() >= 3 }
 ];
 
 export function unlocked() { const d = store.data; return ACHIEVEMENTS.filter(a => a.test(d)); }
@@ -25,12 +28,15 @@ export function renderProgress() {
   const all = store.sessions, routines = store.routines;
   const last10 = a => a.slice(-10);
 
+  const cal = store.profile.calibration;
   $('#pg-top').innerHTML = [
-    ['Sesiones', all.length],
-    ['Rutinas', routines.length],
-    ['Racha', store.streak() + ' d'],
-    ['Último puntaje', routines.length ? routines[routines.length - 1].score : '–']
+    ['Índice de Memoria', globalIndex() ?? '–'],
+    ['Línea base', cal ? cal.global : '–'],
+    ['Sesiones diarias', routines.length],
+    ['Racha', store.streak() + ' d']
   ].map(k => `<div><div class="k">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
+
+  renderImBars($('#pg-im'), true);
 
   $('#pg-cards').innerHTML =
     card('Pares', [['Sesiones', p.length], ['Mejor nivel', p.length ? Math.max(...p.map(x => x.level)) : '–'], ['Eficiencia media', p.length ? Math.round(avg(p.map(x => x.eff))) + '%' : '–']], bars(last10(p).map(x => x.eff), 100), 'eficiencia') +
