@@ -22,6 +22,7 @@ Además incluye:
 - **planes** (modelo freemium).
 
 - **Juego en línea:** https://gimnasio-memoria.vercel.app
+- **Código fuente (editable):** https://github.com/Adagu69/gimnasio-memoria
 - **Capturas:** `docs/capturas/` · **Video demostrativo:** `docs/video/demo.mp4` · **Informe final:** `docs/informe/Informe-Gimnasio-de-Memoria.docx` (se genera con `npm run informe`)
 
 ## Diseño: "el DOM es la verdad, el 3D es la piel"
