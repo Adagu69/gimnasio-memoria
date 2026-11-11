@@ -1,21 +1,27 @@
 {
   "name": "gimnasio-memoria",
-  "version": "2.0.0",
-  "description": "Programa web de entrenamiento de la memoria: prueba de nivel, sesión diaria e índice de memoria con tres ejercicios adaptativos (Pares, Secuencia, N-Back).",
+  "version": "3.0.0",
+  "description": "Gimnasio de memoria en Pixel-3D (Three.js + Matter.js): prueba de nivel, sesión diaria e índice de memoria con cuatro ejercicios adaptativos (Pares, Secuencia, N-Back y Palacio de la memoria).",
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "npx --yes serve . -l 5173",
+    "start": "node tools/dev.mjs",
     "build": "node tools/build.mjs",
     "test": "node tools/test.mjs",
+    "test:unit": "node --test --experimental-test-coverage \"tools/unit/*.test.mjs\"",
     "capturas": "node tools/capturas.mjs",
     "video": "node tools/video.mjs",
     "informe": "node tools/informe.mjs"
   },
   "devDependencies": {
+    "@fontsource/pixelify-sans": "5.3.0",
+    "docx": "^9.0.0",
     "esbuild": "^0.24.2",
-    "playwright": "^1.56.0",
-    "docx": "^9.0.0"
+    "playwright": "^1.56.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "matter-js": "0.20.0",
+    "three": "0.187.0"
+  }
 }

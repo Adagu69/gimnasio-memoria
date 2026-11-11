@@ -4,6 +4,7 @@
 import { $, $$, setMsg, enter, haptic } from '../ui.js';
 import { store } from '../store.js';
 import { tone, sfx, BLOCK_FREQ } from '../audio.js';
+import { blockRect } from './corsi-layout.js';
 
 const START_LEN = 3, MAX_LEN = 9;
 let blocks = [], seq = [], expected = [], pos = 0, len = START_LEN, span = 0, tries = 0, input = false, timers = [];
@@ -87,6 +88,9 @@ export const secuencia = {
     grid = $('#s-grid'); elLen = $('#s-len'); elSpan = $('#s-span'); elState = $('#s-state'); elMsg = $('#s-msg'); elTries = $('#s-tries'); bStart = $('#s-start'); segMode = $('#s-mode');
     for (let i = 0; i < 9; i++) {
       const b = document.createElement('button'); b.className = 'block'; b.disabled = true; b.setAttribute('aria-label', 'Bloque ' + (i + 1));
+      // Tablero de Corsi irregular (igual en las dos pieles): la posición la decide corsi-layout.js.
+      const r = blockRect(i);
+      Object.assign(b.style, { left: r.left + '%', top: r.top + '%', width: r.width + '%', height: r.height + '%' });
       // La respuesta vive en la pulsación: tono y realce al bajar el dedo; la validación, al soltar.
       b.addEventListener('pointerdown', () => { if (input) { b.classList.add('pressing'); tone(BLOCK_FREQ[i], 140); } });
       const release = () => b.classList.remove('pressing');

@@ -2,7 +2,7 @@
 import { $, bars, avg, fmtDate } from '../ui.js';
 import { store } from '../store.js';
 import { globalIndex } from '../indice.js';
-import { renderImBars } from './hoy.js';
+import { renderImBars } from './mundo.js';
 
 export const ACHIEVEMENTS = [
   { id: 'primera', icon: '✓', name: 'Primera sesión', desc: 'Completa cualquier ejercicio', test: d => d.sessions.length >= 1 },
@@ -12,6 +12,7 @@ export const ACHIEVEMENTS = [
   { id: 'span6', icon: '6', name: 'Amplitud 6', desc: 'Secuencia de 6 bloques', test: d => d.sessions.some(s => s.game === 'secuencia' && s.span >= 6) },
   { id: 'inverso', icon: '↺', name: 'Al revés', desc: 'Amplitud 4 en modo inverso', test: d => d.sessions.some(s => s.game === 'secuencia' && s.mode === 'inverso' && s.span >= 4) },
   { id: 'nback3', icon: 'N3', name: 'Memoria de trabajo', desc: 'N-Back con N = 3 y precisión ≥ 85 %', test: d => d.sessions.some(s => s.game === 'nback' && s.n >= 3 && s.acc >= 85) },
+  { id: 'palacio8', icon: '⌂', name: 'Palacio de 8', desc: 'Palacio con 8 lugares y precisión ≥ 85 %', test: d => d.sessions.some(s => s.game === 'palacio' && s.loci >= 8 && s.acc >= 85) },
   { id: 'rutina', icon: '▶', name: 'Sesión completa', desc: 'Termina una sesión diaria', test: d => d.routines.length >= 1 },
   { id: 'nivel', icon: '◎', name: 'Prueba de nivel', desc: 'Completa la prueba de nivel inicial', test: d => !!d.profile.calibration },
   { id: 'racha3', icon: '🔥', name: 'Racha de 3', desc: 'Tres días seguidos de sesión', test: () => store.streak() >= 3 }
@@ -24,7 +25,7 @@ function card(t, kpis, chart, cap) {
 }
 
 export function renderProgress() {
-  const p = store.byGame('pares'), s = store.byGame('secuencia'), n = store.byGame('nback');
+  const p = store.byGame('pares'), s = store.byGame('secuencia'), n = store.byGame('nback'), m = store.byGame('palacio');
   const all = store.sessions, routines = store.routines;
   const last10 = a => a.slice(-10);
 
@@ -41,7 +42,8 @@ export function renderProgress() {
   $('#pg-cards').innerHTML =
     card('Pares', [['Sesiones', p.length], ['Mejor nivel', p.length ? Math.max(...p.map(x => x.level)) : '–'], ['Eficiencia media', p.length ? Math.round(avg(p.map(x => x.eff))) + '%' : '–']], bars(last10(p).map(x => x.eff), 100), 'eficiencia') +
     card('Secuencia', [['Sesiones', s.length], ['Mejor amplitud', s.length ? Math.max(...s.map(x => x.span)) : '–'], ['Amplitud media', s.length ? avg(s.map(x => x.span)).toFixed(1) : '–']], bars(last10(s).map(x => x.span), 9), 'amplitud') +
-    card('N-Back', [['Sesiones', n.length], ['Mejor precisión', n.length ? Math.max(...n.map(x => x.acc)) + '%' : '–'], ['N más alto', n.length ? Math.max(...n.map(x => x.n)) : '–']], bars(last10(n).map(x => x.acc), 100), 'precisión');
+    card('N-Back', [['Sesiones', n.length], ['Mejor precisión', n.length ? Math.max(...n.map(x => x.acc)) + '%' : '–'], ['N más alto', n.length ? Math.max(...n.map(x => x.n)) : '–']], bars(last10(n).map(x => x.acc), 100), 'precisión') +
+    card('Palacio', [['Sesiones', m.length], ['Más lugares', m.length ? Math.max(...m.map(x => x.loci)) : '–'], ['Precisión media', m.length ? Math.round(avg(m.map(x => x.acc))) + '%' : '–']], bars(last10(m).map(x => x.acc), 100), 'precisión');
 
   const got = new Set(unlocked().map(a => a.id));
   $('#pg-badges').innerHTML = ACHIEVEMENTS.map(a =>
@@ -51,6 +53,7 @@ export function renderProgress() {
     const d = fmtDate(x.t);
     if (x.game === 'pares') return [d, 'Pares', `Nivel ${x.level} · ${'★'.repeat(x.stars || 0)}`, `${x.moves} intentos · ${x.secs} s · ${x.eff}%`];
     if (x.game === 'secuencia') return [d, 'Secuencia', `Amplitud ${x.span}`, `${x.mode || 'directo'} · falló con ${x.failedAt} bloques`];
+    if (x.game === 'palacio') return [d, 'Palacio', `Precisión ${x.acc}%`, `${x.correct} de ${x.total} objetos · ${x.loci} lugares`];
     return [d, 'N-Back', `Precisión ${x.acc}%`, `N=${x.n} · ${x.hits} aciertos · ${x.miss} omisiones · ${x.fa} falsas alarmas`];
   });
   $('#pg-table tbody').innerHTML = rows.length

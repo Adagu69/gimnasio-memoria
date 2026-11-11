@@ -1,0 +1,92 @@
+/* juegos.css — escenarios 3D de los juegos, banner de fase, Corsi irregular, Palacio y cuerpos de física (DOM).
+   "El DOM es la verdad, el 3D es la piel": con la piel 3D lista (.stage3d.ready) los botones del tablero se vuelven
+   zonas de toque transparentes ENCIMA del canvas; siguen recibiendo clics, teclado y foco visible. */
+
+/* ---------- Escenario 3D ---------- */
+.stage3d{position:relative;isolation:isolate}
+.stage3d > canvas.gl{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;image-rendering:pixelated;display:block}
+.stage3d > :not(canvas){position:relative;z-index:1}
+.board-stage{padding:18px;border:var(--bw) solid var(--line);border-radius:var(--r-lg);background:var(--surface-2);max-width:620px;margin:0 auto;overflow:hidden}
+.skin-3d .board-stage.ready{border-color:var(--fg);box-shadow:var(--shadow)}
+
+/* Pares */
+.cardp,.cardp .face{border-radius:var(--r)}
+.cardp .face{border-width:var(--bw)}
+.skin-3d .stage3d.ready .cardp .face{opacity:0}
+.skin-3d .stage3d.ready .cardp{transform:none!important}
+.skin-3d .stage3d.ready .cardp:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* Secuencia: tablero de Corsi con bloques en posiciones irregulares (las fija corsi-layout.js en ambas pieles) */
+.corsi{position:relative;display:block;aspect-ratio:1/1.1;max-width:380px;margin:0 auto;background:var(--board);border-radius:var(--r);box-shadow:inset 0 0 0 3px rgba(0,0,0,.25)}
+.corsi .block{position:absolute;aspect-ratio:auto;border-radius:3px;border:var(--bw) solid rgba(0,0,0,.35);background:var(--block);box-shadow:var(--bevel)}
+.corsi .block.lit{background:var(--gold);box-shadow:0 0 0 4px var(--warn-soft),var(--bevel)}
+.skin-3d .stage3d.ready .corsi{background:transparent;box-shadow:none}
+.skin-3d .stage3d.ready .block{background:transparent;border-color:transparent;box-shadow:none;transform:none!important}
+.skin-3d .stage3d.ready .block:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* N-Back */
+.nb{max-width:340px}
+.cell{border-radius:var(--r);border-width:var(--bw)}
+.cell .dot{border-radius:3px}
+.skin-3d .stage3d.ready .cell{background:transparent;border-color:transparent}
+.skin-3d .stage3d.ready .cell .dot{opacity:0!important}
+.trialbar{border-radius:0;height:10px;border:var(--bw) solid var(--fg);background:var(--surface)}
+.trialbar i{transition:width .4s steps(8)}
+
+/* ---------- Banner de fase (igual en los 4 juegos) ---------- */
+.phase{display:flex;align-items:center;gap:12px;padding:10px 14px;margin:0 0 14px;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--surface-2);min-height:62px}
+.phase .ph-ico{width:38px;height:38px;flex:none;display:grid;place-items:center;border-radius:var(--r);background:var(--line);color:var(--fg);border:var(--bw) solid var(--fg)}
+.phase .ph-ico svg{width:24px;height:24px;fill:currentColor}
+.phase .ph-txt{display:grid;gap:2px;min-width:0}
+.phase b{font-family:var(--pixel-font);font-size:1.4rem;line-height:1;text-transform:uppercase;letter-spacing:.05em}
+.phase small{color:var(--muted);font-size:.92rem}
+.phase[data-phase="observa"]{background:var(--warn-soft);border-color:var(--warn)}
+.phase[data-phase="observa"] .ph-ico{background:var(--warn);color:#fff}
+.phase[data-phase="observa"] b{color:var(--warn)}
+.phase[data-phase="turno"]{background:var(--ok-soft);border-color:var(--ok)}
+.phase[data-phase="turno"] .ph-ico{background:var(--ok);color:#fff}
+.phase[data-phase="turno"] b{color:var(--ok)}
+.phase[data-phase="atento"]{background:var(--accent-soft);border-color:var(--accent)}
+.phase[data-phase="atento"] .ph-ico{background:var(--accent);color:var(--accent-fg)}
+.phase[data-phase="atento"] b{color:var(--accent)}
+.phase[data-phase="fin"] .ph-ico{background:var(--gold);color:#17203a}
+.ph-ring{margin-left:auto;width:40px;height:40px;flex:none;display:none}
+.ph-ring.run{display:block}
+.ph-ring circle{fill:none;stroke:var(--warn);stroke-width:5;stroke-dasharray:94.25;stroke-dashoffset:0;transform:rotate(-90deg);transform-origin:center;animation:ring-drain var(--ring-ms,3000ms) steps(24) forwards}
+@keyframes ring-drain{to{stroke-dashoffset:94.25}}
+
+/* ---------- Palacio de la memoria ---------- */
+.mp-stage{width:100%;aspect-ratio:16/9;max-height:58vh;border:var(--bw) solid var(--fg);border-radius:var(--r-lg);background:var(--floor);overflow:hidden;box-shadow:var(--shadow)}
+.mp-room{position:absolute!important;inset:7% 6% 16%;}
+.locus{position:absolute;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:2px;opacity:.35;transition:opacity var(--d-fast) ease}
+.locus i{font-style:normal;font-family:var(--pixel-font);width:24px;height:24px;display:grid;place-items:center;border-radius:3px;background:var(--wall);border:var(--bw) solid var(--wood);font-size:.8rem}
+.locus b{font-size:.7rem;font-weight:700;color:var(--fg);white-space:nowrap}
+.locus canvas{width:44px;height:44px;image-rendering:pixelated;background:var(--board);border-radius:3px;padding:3px}
+.locus.used{opacity:.75}
+.locus.here{opacity:1}
+.locus.here i{background:var(--accent);color:var(--accent-fg);border-color:var(--fg)}
+.skin-3d .mp-stage.ready{background:transparent}
+.skin-3d .mp-stage.ready .mp-room{visibility:hidden}
+.mp-caption{position:absolute!important;left:50%;bottom:12px;transform:translateX(-50%);margin:0;padding:8px 14px;max-width:calc(100% - 24px);text-align:center;font-family:var(--pixel-font);font-size:1.25rem;background:var(--surface);border:var(--bw) solid var(--fg);border-radius:var(--r);box-shadow:var(--drop)}
+.mp-caption:empty{display:none}
+.mp-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:14px}
+.mp-options:empty{display:none}
+.mp-opt{display:grid;justify-items:center;gap:6px;padding:12px 10px;min-height:104px;background:var(--surface);border:var(--bw) solid var(--fg);border-radius:var(--r);box-shadow:var(--bevel),var(--drop);font-weight:700}
+.mp-opt canvas{width:52px;height:52px;image-rendering:pixelated;background:var(--board);border-radius:3px;padding:4px}
+.mp-opt:active{transform:translateY(3px)}
+.mp-opt:disabled{cursor:default}
+.mp-opt.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.mp-opt.bad{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Física en el DOM (piel clásica) ---------- */
+.phys{position:relative;overflow:hidden}
+.r-stack{height:clamp(170px,30vh,250px);margin-top:16px;border:var(--bw) solid var(--fg);border-radius:var(--r-lg);background:var(--surface-2);box-shadow:var(--shadow)}
+.pb{position:absolute!important;left:0;top:0;display:block;background:var(--pb,var(--accent));border-radius:2px;box-shadow:inset -3px -3px 0 rgba(0,0,0,.25),inset 3px 3px 0 rgba(255,255,255,.35);will-change:transform}
+.pb-star{background:transparent;box-shadow:none;display:grid;place-items:center}
+.pb-star::before{content:"★";color:var(--gold);font-size:30px;line-height:1;text-shadow:2px 2px 0 rgba(0,0,0,.25)}
+.pb-token{border-radius:50%}
+.pb-obj{background:var(--board);padding:2px}
+.pb-obj canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+
+/* Tarjeta de juego: el banner de sesión y el de fase quedan arriba */
+.game-card{position:relative}

@@ -1,16 +1,19 @@
-// video.mjs — graba un video demostrativo del flujo v2: bienvenida → configuración → prueba de nivel →
-// resultados → plan → Hoy → progreso. Captura fotogramas (8 por segundo) y los monta con ffmpeg en docs/video/demo.mp4.
+// video.mjs — graba un video demostrativo del flujo v3 (Pixel-3D): bienvenida → configuración → prueba de nivel
+// (4 juegos) → resultados → plan → gimnasio → progreso. Captura fotogramas (8 por segundo) y los monta con ffmpeg en docs/video/demo.mp4.
 import { chromium } from 'playwright';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 import { mkdirSync, rmSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 
-const url = pathToFileURL(resolve('dist/index.html')).href;
+const url = pathToFileURL(resolve('dist/index.html')).href + '?visual=pixel3d&perf=off';
 const dir = 'docs/video';
 mkdirSync(dir, { recursive: true });
 
-const browser = await chromium.launch(process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {});
+const browser = await chromium.launch({
+  ...(process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {}),
+  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist']
+});
 const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, locale: 'es-PE' });
 const page = await ctx.newPage();
 const pause = ms => page.waitForTimeout(ms);
@@ -30,6 +33,7 @@ await page.addInitScript(() => {
 });
 async function click(sel) {
   const el = await page.waitForSelector(sel);
+  await el.scrollIntoViewIfNeeded(); // las opciones del Palacio quedan bajo el pliegue a 1280×800
   const box = await el.boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 12 });
   await pause(250);
@@ -103,15 +107,39 @@ await click('#s-go'); await page.waitForSelector('#n-start:has-text("Detener")')
   }
 }
 await page.waitForSelector('#s-result:not([hidden])'); await pause(2600);
-await click('#s-next'); await pause(3200);           // resultados
+await click('#s-next'); await pause(1500);
+
+// Palacio de la memoria: se registra el objeto de cada lugar y se responde bien
+await click('#s-go');
+await page.evaluate(() => {
+  window.__pal = {};
+  const cap = document.querySelector('#mp-caption');
+  new MutationObserver(() => { if (cap.dataset.obj && document.querySelector('#mp-stage').dataset.phase === 'observa') window.__pal[cap.dataset.locus] = cap.dataset.obj; })
+    .observe(cap, { attributes: true, attributeFilter: ['data-obj', 'data-locus'] });
+});
+await page.waitForFunction(() => document.querySelector('#mp-stage').dataset.phase === 'turno', null, { timeout: 60000 });
+while (await page.$eval('#mp-stage', s => s.dataset.phase) === 'turno') {
+  const btn = await page.$('#mp-options button:not([disabled])');
+  if (!btn) { await pause(80); continue; }
+  await pause(500);
+  const locus = await page.$eval('#mp-stage', s => s.dataset.locus);
+  const want = await page.evaluate(l => window.__pal[l], locus);
+  await click(want ? `#mp-options button[data-obj="${want}"]` : '#mp-options button:not([disabled])');
+  // Con la captura de fotogramas el navegador va más lento: el recorrido de cámara al siguiente lugar puede tardar varios segundos.
+  await page.waitForFunction(l => document.querySelector('#mp-stage').dataset.locus !== l || document.querySelector('#mp-stage').dataset.phase !== 'turno', locus, { timeout: 30000 });
+}
+await page.waitForSelector('#s-result:not([hidden])'); await pause(2800);
+await click('#s-next'); await pause(3400);           // resultados (columnas de bloques con física)
 await click('#r-next'); await pause(3200);           // plan
-await click('#p-next'); await pause(3000);           // hoy
-await click('.side nav [data-go="progreso"]'); await pause(2200);
+await click('#p-next'); await pause(3000);           // gimnasio
+await click('[data-station="palacio"]'); await pause(2200);
+await click('#st-close'); await pause(1200);
+await click('.topnav nav [data-go="progreso"]'); await pause(2200);
 await page.mouse.wheel(0, 500); await pause(1800);
-await click('.side nav [data-go="juegos"]'); await pause(1800);
-await click('#v-juegos [data-help="secuencia"]'); await pause(2600);
+await click('.topnav nav [data-go="juegos"]'); await pause(1800);
+await click('#v-juegos [data-help="palacio"]'); await pause(2600);
 await click('#modal-actions .primary'); await pause(600);
-await click('.side nav [data-go="hoy"]'); await pause(2000);
+await click('.topnav nav [data-go="hoy"]'); await pause(2000);
 
 grabbing = false; await pause(300);
 await ctx.close();

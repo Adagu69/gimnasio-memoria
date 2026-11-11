@@ -4,8 +4,9 @@
 const KEY = 'gimnasio-memoria.v2';
 
 const DEFAULTS = () => ({
-  profile: { name: '', createdAt: Date.now(), onboarded: false, goal: '', areas: ['pares', 'secuencia', 'nback'], ageRange: '', difficulty: 'estandar', calibration: null },
-  settings: { sound: true, volume: 60, theme: 'system', nbackN: 2, paresLevel: 1 },
+  profile: { name: '', createdAt: Date.now(), onboarded: false, goal: '', areas: ['pares', 'secuencia', 'nback', 'palacio'], ageRange: '', difficulty: 'estandar', calibration: null },
+  // visual: 'auto' (Pixel-3D si hay WebGL) | 'clasico'; palacioLoci: lugares del próximo Palacio.
+  settings: { sound: true, volume: 60, theme: 'system', nbackN: 2, paresLevel: 1, palacioLoci: 4, visual: 'auto' },
   sessions: [],
   routines: []
 });

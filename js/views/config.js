@@ -4,6 +4,8 @@ import { $, $$, toast, enter } from '../ui.js';
 import { store } from '../store.js';
 import { go } from '../router.js';
 import { sesion } from './sesion.js';
+import { ORDER } from '../indice.js';
+import { startLoci } from '../games/palacio-logic.js';
 
 const STEPS = 6;
 let step = 0;
@@ -39,6 +41,7 @@ function finish() {
   store.setProfile({ name: draft.name, goal: draft.goal || 'entrenar', areas: draft.areas, ageRange: draft.ageRange || '', difficulty: draft.difficulty || 'estandar', onboarded: true });
   store.setSetting('paresLevel', level);
   store.setSetting('nbackN', draft.difficulty === 'avanzado' ? 3 : 2);
+  store.setSetting('palacioLoci', startLoci(draft.difficulty));
   sesion.start('calibracion');
 }
 
@@ -54,7 +57,7 @@ function single(containerId, key, autoNext = true) {
 
 export const config = {
   init() {
-    $('#b-start').addEventListener('click', () => { draft = { areas: ['pares', 'secuencia', 'nback'] }; go('config'); showStep(0); });
+    $('#b-start').addEventListener('click', () => { draft = { areas: [...ORDER] }; go('config'); showStep(0); });
     $('#w-next').addEventListener('click', next);
     $('#w-back').addEventListener('click', () => { if (step > 0) showStep(step - 1); });
     $('#w-name').addEventListener('keydown', e => { if (e.key === 'Enter') next(); });

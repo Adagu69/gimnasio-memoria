@@ -1,0 +1,120 @@
+/* pixel.css — sistema visual Pixel-3D.
+   Dirección: consola de 16 bits con profundidad real (Three.js). Bordes de 2 px, biseles con luz arriba-izquierda,
+   sombras escalonadas sin desenfoque y radios casi rectos. Fuente pixel (Pixelify Sans, OFL) SOLO en títulos,
+   HUD y números: el texto largo sigue en la fuente del sistema por legibilidad (público de 60 años o más). */
+
+@font-face { font-family: "Pixelify Sans"; src: url("../assets/fonts/pixelify-sans-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Pixelify Sans"; src: url("../assets/fonts/pixelify-sans-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
+:root{
+  --pixel-font:"Pixelify Sans", ui-monospace, "Cascadia Mono", monospace;
+  /* Paleta del mundo 3D (la leen las escenas con palette.js) */
+  --board:#1f2540; --block:#5b6fb8; --floor:#efe3c8; --floor-2:#e3d3b1; --wall:#f6eedd; --wood:#b07a4a;
+  /* Forma pixel */
+  --r:4px; --r-lg:6px; --bw:2px;
+  --edge:#17203a26;
+  --bevel:inset -3px -3px 0 rgba(0,0,0,.18), inset 3px 3px 0 rgba(255,255,255,.45);
+  --drop:0 4px 0 rgba(23,32,58,.22);
+  --shadow-sm:3px 3px 0 rgba(23,32,58,.10);
+  --shadow:4px 4px 0 rgba(23,32,58,.12);
+  --shadow-lg:6px 6px 0 rgba(23,32,58,.18);
+  --nav-h:62px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --board:#0b0f1d; --block:#6f86e8; --floor:#2b3150; --floor-2:#252a46; --wall:#343d5f; --wood:#7a5232;
+  --edge:#00000055; --drop:0 4px 0 rgba(0,0,0,.45);
+  --shadow-sm:3px 3px 0 rgba(0,0,0,.35); --shadow:4px 4px 0 rgba(0,0,0,.4); --shadow-lg:6px 6px 0 rgba(0,0,0,.5);
+  --bevel:inset -3px -3px 0 rgba(0,0,0,.35), inset 3px 3px 0 rgba(255,255,255,.12) } }
+:root[data-theme="dark"]{
+  --board:#0b0f1d; --block:#6f86e8; --floor:#2b3150; --floor-2:#252a46; --wall:#343d5f; --wood:#7a5232;
+  --edge:#00000055; --drop:0 4px 0 rgba(0,0,0,.45);
+  --shadow-sm:3px 3px 0 rgba(0,0,0,.35); --shadow:4px 4px 0 rgba(0,0,0,.4); --shadow-lg:6px 6px 0 rgba(0,0,0,.5);
+  --bevel:inset -3px -3px 0 rgba(0,0,0,.35), inset 3px 3px 0 rgba(255,255,255,.12) }
+
+/* Textura de fondo: retícula de puntos muy sutil (atmósfera de "pantalla") */
+body{
+  background-color:var(--bg);
+  background-image:radial-gradient(var(--edge) 1px, transparent 1.2px);
+  background-size:12px 12px;
+}
+
+/* ---------- Tipografía ---------- */
+h1,h2,.hero-card h1,.score-big .n,.im-card .n,.rcard .box .n,.hud .v,.kpis .v,.kpis4 .v,.im-global,.plan .price,
+.stepper span b,.logo-big,.brand .mark,.calendar .c,.eyebrow{font-family:var(--pixel-font);letter-spacing:0;font-weight:700}
+h1{font-size:clamp(1.9rem,4.4vw,2.7rem);line-height:1.05}
+h2{font-size:1.55rem}
+.eyebrow{text-transform:uppercase;font-size:.85rem;letter-spacing:.06em}
+.k,.tag,th,.form > label,.hud .k,.kpis .k,.kpis4 .k,.score-big .l{font-family:var(--pixel-font);font-weight:400;letter-spacing:.06em}
+
+/* ---------- Superficies ---------- */
+.card,.gcard,.pcard,.plan,.rcard .box,.im-card,.kpis4 div,.badge,.choices button,.check,.input,.modal-box{
+  border:var(--bw) solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+.card.soft{box-shadow:none;border-style:dashed}
+.gcard{border-top:6px solid var(--st,var(--accent))}
+@media (hover:hover){ .gcard:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(23,32,58,.16)} }
+
+/* ---------- Botones: bloque con bisel que se hunde al pulsar ---------- */
+.btn{border:var(--bw) solid var(--fg);border-radius:var(--r);box-shadow:var(--bevel),var(--drop);font-weight:700}
+.btn:active{transform:translateY(3px);box-shadow:var(--bevel),0 1px 0 rgba(23,32,58,.22)}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--fg);box-shadow:var(--bevel),var(--drop)}
+.btn.ghost{background:var(--surface);box-shadow:var(--drop)}
+.btn.big{padding:14px 26px;font-size:1.1rem}
+.btn.wide{border-radius:var(--r)}
+.btn:disabled{box-shadow:none}
+.icon-btn{border-radius:var(--r);border:var(--bw) solid transparent}
+.icon-btn:hover{border-color:var(--line)}
+.seg{border:var(--bw) solid var(--fg);border-radius:var(--r);box-shadow:var(--drop)}
+.seg button[aria-pressed="true"]{box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
+.pill{border-radius:var(--r);border-width:var(--bw)}
+.choices button[aria-pressed="true"]{border-color:var(--accent);box-shadow:var(--shadow),inset 0 0 0 2px var(--accent)}
+.check .box{border-radius:3px}
+.progress,.progress i{border-radius:0}
+.progress{height:10px;border:var(--bw) solid var(--fg);background:var(--surface)}
+.switch span{border-radius:var(--r)} .switch span::before{border-radius:2px}
+.toast{border-radius:var(--r);border:var(--bw) solid #000;box-shadow:var(--drop)}
+.modal-box{border-radius:var(--r-lg);box-shadow:var(--shadow-lg)}
+button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
+/* ---------- Bienvenida y asistente ---------- */
+.logo-big{border-radius:var(--r-lg);border:3px solid var(--fg);background:var(--accent);box-shadow:var(--bevel),6px 6px 0 var(--fg);font-size:1.9rem;width:84px;height:84px}
+.intro-steps b{border-radius:var(--r);border:var(--bw) solid var(--fg);font-family:var(--pixel-font)}
+.brain-art{border-radius:var(--r-lg);border:3px solid var(--fg);box-shadow:6px 6px 0 var(--fg)}
+.brain-art span{border-radius:3px;box-shadow:var(--bevel)}
+
+/* ---------- Sesión: pasos y tarjeta protagonista ---------- */
+.stepper span b{border-radius:var(--r);border:var(--bw) solid var(--fg)}
+.stepper span + span::before{height:0;border-top:3px dotted var(--line)}
+.hero-card{border-radius:var(--r-lg);border:3px solid var(--fg);box-shadow:8px 8px 0 var(--fg)}
+.hero-card .btn.primary{border-radius:var(--r)}
+.hero-art.stage3d{width:100%;max-width:360px;aspect-ratio:16/10;border:3px solid rgba(255,255,255,.75);border-radius:var(--r);overflow:hidden;background:rgba(255,255,255,.14);margin-bottom:4px}
+.hero-card.result .hero-art.small{aspect-ratio:3/1;border:0;border-bottom:3px solid var(--fg);border-radius:0;max-width:none}
+.score-big{border-radius:var(--r);border:var(--bw) solid var(--line)}
+
+/* ---------- Resultados y plan ---------- */
+.result-grid{grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:12px;margin-top:10px}
+.rcard h3{font-family:var(--pixel-font)}
+.rcard .box small{font-size:.78rem}
+.im-card{border-radius:var(--r-lg)}
+.plan-table .delta{border-radius:3px}
+
+/* ---------- Panel del índice y calendario ---------- */
+.im-bars .bar,.im-bars .bar i{border-radius:0}
+.im-bars .bar{height:12px;border:var(--bw) solid var(--fg);background:var(--surface-2)}
+.im-bars .bar i.palacio{background:var(--c1)}
+.calendar .c{border-radius:3px}
+.badge i{border-radius:var(--r)}
+.bars i{border-radius:0}
+
+@media (max-width:560px){
+  .result-grid{gap:6px}
+  .rcard .box{padding:8px} .rcard .box .n{font-size:1.5rem} .rcard .box small:last-child{display:none}
+}
+
+/* Movimiento reducido: sin hundimientos ni desplazamientos */
+@media (prefers-reduced-motion:reduce){
+  .btn:active,.gcard:hover{transform:none}
+}
+/* Más contraste: bordes con el color del texto */
+@media (prefers-contrast:more){
+  .card,.gcard,.pcard,.plan,.btn,.badge,.station,.phase,.mp-opt{border-color:var(--fg)}
+}

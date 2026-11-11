@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gimnasio de Memoria</title>
-<meta name="description" content="Programa de entrenamiento de la memoria con tres ejercicios adaptativos: Pares, Secuencia y N-Back. Prueba de nivel, sesión diaria e índice de memoria.">
+<meta name="description" content="Gimnasio de memoria en Pixel-3D con cuatro ejercicios adaptativos: Pares, Secuencia (Corsi), N-Back y Palacio de la memoria. Prueba de nivel, sesión diaria e índice de memoria.">
 <meta name="theme-color" content="#2a56e8">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/styles.css">
@@ -17,8 +17,9 @@
 <section class="view focus" id="v-bienvenida" hidden>
   <div class="focus-in">
     <div class="logo-big" aria-hidden="true">GM</div>
+    <p class="eyebrow">Gimnasio de Memoria</p>
     <h1>Hola</h1>
-    <p class="muted">Vamos a crear un programa de entrenamiento de memoria adaptado a ti.</p>
+    <p class="muted">Vamos a crear un programa de entrenamiento de memoria adaptado a ti: cuatro ejercicios cortos, uno por cada tipo de memoria.</p>
     <h3 style="margin-top:22px">Comenzaremos con</h3>
     <ol class="intro-steps">
       <li><b class="n1">1</b><span>Tus objetivos</span></li>
@@ -29,7 +30,7 @@
   <div class="focus-foot"><button class="btn primary wide" id="b-start">Empecemos</button></div>
 </section>
 
-<!-- Asistente de configuración (5 pasos) -->
+<!-- Asistente de configuración -->
 <section class="view focus" id="v-config" hidden>
   <div class="wizard-bar"><button class="icon-btn" id="w-back" aria-label="Atrás">←</button><div class="progress"><i id="w-progress"></i></div></div>
   <div class="focus-in">
@@ -58,6 +59,7 @@
         <label class="check on"><input type="checkbox" value="pares" checked><span class="box"></span><span><b>Memoria visual a corto plazo</b><small>Retener lo que ves durante unos segundos · Pares</small></span></label>
         <label class="check on"><input type="checkbox" value="secuencia" checked><span class="box"></span><span><b>Memoria espacial</b><small>Memorizar y recordar ubicaciones y orden · Secuencia</small></span></label>
         <label class="check on"><input type="checkbox" value="nback" checked><span class="box"></span><span><b>Memoria de trabajo</b><small>Mantener y actualizar información · N-Back</small></span></label>
+        <label class="check on"><input type="checkbox" value="palacio" checked><span class="box"></span><span><b>Memoria asociativa</b><small>Recordar qué objeto había en cada lugar · Palacio</small></span></label>
       </div>
     </div>
 
@@ -97,13 +99,13 @@
   <div class="stepper" id="s-stepper"></div>
   <div class="focus-in">
     <div class="hero-card" id="s-intro">
-      <div class="hero-art" id="s-art"></div>
+      <div class="hero-art stage3d" id="s-art"></div>
       <h1 id="s-title">Pares</h1>
       <p id="s-desc"></p>
       <button class="btn primary" id="s-go">Comenzar</button>
     </div>
     <div class="hero-card result" id="s-result" hidden>
-      <div class="hero-art small" id="s-art2"></div>
+      <div class="hero-art small stage3d phys" id="s-art2"></div>
       <h2 id="s-rtitle"></h2>
       <p class="muted" id="s-rdesc"></p>
       <div class="score-big"><span class="l">Puntaje</span><span class="n" id="s-rscore">0</span><span class="muted small" id="s-rdetail"></span></div>
@@ -117,6 +119,7 @@
   <div class="focus-in wide">
     <h1 class="center">Resultados de tu prueba de nivel</h1>
     <p class="muted center" id="r-sub">Tu índice de memoria inicial en cada área (0 a 100).</p>
+    <div class="r-stack stage3d phys" id="r-stack" aria-hidden="true"></div>
     <div class="result-grid" id="r-grid"></div>
     <div class="im-card"><span class="l">Índice de Memoria global</span><span class="n" id="r-global">0</span><span class="muted small" id="r-ref"></span></div>
   </div>
@@ -126,102 +129,130 @@
 <!-- Plan de 30 días -->
 <section class="view focus" id="v-plan" hidden>
   <div class="focus-in">
-    <div class="plan-art" aria-hidden="true"><svg viewBox="0 0 200 90" width="200" height="90"><polyline points="10,75 50,62 90,50 130,32 180,14" fill="none" stroke="var(--ok)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="180" cy="14" r="6" fill="var(--ok)"/><circle cx="10" cy="75" r="5" fill="var(--accent)"/></svg></div>
+    <div class="plan-art" aria-hidden="true"><svg viewBox="0 0 200 90" width="200" height="90" shape-rendering="crispEdges"><g fill="var(--line)"><rect x="10" y="70" width="12" height="12"/><rect x="40" y="60" width="12" height="12"/><rect x="70" y="50" width="12" height="12"/><rect x="100" y="40" width="12" height="12"/><rect x="130" y="30" width="12" height="12"/></g><rect x="10" y="70" width="12" height="12" fill="var(--accent)"/><rect x="160" y="14" width="22" height="22" fill="var(--ok)"/><rect x="166" y="2" width="4" height="14" fill="var(--fg)"/></svg></div>
     <h1 class="center">Plan de 30 días: tu camino a seguir</h1>
-    <p class="muted center" style="max-width:44ch;margin:0 auto">Si entrenas unos minutos cada día, tu meta es subir tu Índice de Memoria un <b id="p-pct">25 %</b> en un mes.</p>
+    <p class="muted center" style="max-width:44ch;margin:0 auto">Si entrenas unos minutos cada día, tu meta es subir tu Índice de Memoria un <b id="p-pct">25 %</b> en un mes. Cada sesión completada suma un bloque a tu Torre de constancia.</p>
     <div class="tablewrap" style="margin-top:18px"><table class="plan-table"><thead><tr><th>Área</th><th>Línea base</th><th>Meta en 30 días</th></tr></thead><tbody id="p-rows"></tbody></table></div>
     <p class="muted small center" style="margin-top:12px">La meta es un objetivo de práctica, no una predicción. El índice mide tu desempeño en estos ejercicios.</p>
   </div>
-  <div class="focus-foot"><button class="btn primary wide" id="p-next">Ir a mi panel</button></div>
+  <div class="focus-foot"><button class="btn primary wide" id="p-next">Ir al gimnasio</button></div>
 </section>
 
-<!-- ===================== APLICACIÓN (con menú lateral) ===================== -->
+<!-- ===================== APLICACIÓN ===================== -->
 <div class="app" id="app" hidden>
-  <aside class="side">
-    <button class="brand" data-go="hoy"><span class="mark">GM</span><span>Gimnasio de Memoria</span></button>
+  <header class="topnav">
+    <button class="brand" data-go="hoy"><span class="mark" aria-hidden="true">GM</span><span>Gimnasio de Memoria</span></button>
     <nav aria-label="Secciones">
-      <button data-go="hoy"><i>☀</i><span>Hoy</span></button>
-      <button data-go="juegos"><i>▦</i><span>Juegos</span></button>
-      <button data-go="progreso"><i>📈</i><span>Mi progreso</span></button>
-      <button data-go="ajustes"><i>⚙</i><span>Ajustes</span></button>
+      <button data-go="hoy"><i aria-hidden="true">⌂</i><span>Gimnasio</span></button>
+      <button data-go="juegos"><i aria-hidden="true">▦</i><span>Juegos</span></button>
+      <button data-go="progreso"><i aria-hidden="true">★</i><span>Progreso</span></button>
+      <button data-go="ajustes"><i aria-hidden="true">⚙</i><span>Ajustes</span></button>
     </nav>
-    <div class="side-foot"><span class="pill accent" id="side-streak" hidden></span></div>
-  </aside>
+    <span class="pill accent streak-pill" id="side-streak" hidden></span>
+  </header>
 
   <main class="wrap">
 
-    <!-- HOY -->
-    <section class="view" id="v-hoy" hidden>
-      <h1 id="hoy-greet">Buenos días</h1>
-      <div class="hoy-grid">
-        <div class="col">
-          <div class="card session-card">
-            <div class="ring" id="hoy-ring"><span class="mark">GM</span></div>
-            <div class="session-info">
-              <h2>Sesión de entrenamiento diaria</h2>
-              <p class="muted" id="hoy-date"></p>
-              <button class="btn primary" id="hoy-start">Comenzar</button>
-              <p class="pill ok" id="hoy-done" hidden>Sesión de hoy completada</p>
-            </div>
-            <div class="session-games">
-              <h3 class="sub" style="margin-top:0">Ejercicios de hoy</h3>
-              <div class="mini-games" id="hoy-games"></div>
-            </div>
-          </div>
-          <div class="card soft">
-            <div class="row between">
-              <div><h3>Más entrenamiento</h3><p class="muted">Juega cualquier ejercicio por separado cuando quieras.</p></div>
-              <button class="btn" data-go="juegos">Ver juegos</button>
-            </div>
-          </div>
+    <!-- GIMNASIO (mundo 3D navegable) -->
+    <section class="view mundo" id="v-hoy" hidden>
+      <div class="stage3d mundo-stage" id="mundo-stage">
+        <div class="stations" id="stations" role="group" aria-label="Estaciones del gimnasio. Usa las flechas para moverte.">
+          <button class="station" data-station="pares" style="--st:var(--c4)" aria-pressed="false"><i class="st-ico" aria-hidden="true">◆</i><b>Pares</b><small>Memoria visual</small><em class="st-best"></em></button>
+          <button class="station" data-station="secuencia" style="--st:var(--c6)" aria-pressed="false"><i class="st-ico" aria-hidden="true">▦</i><b>Secuencia</b><small>Memoria espacial</small><em class="st-best"></em></button>
+          <button class="station" data-station="nback" style="--st:var(--c5)" aria-pressed="false"><i class="st-ico" aria-hidden="true">▣</i><b>N-Back</b><small>Memoria de trabajo</small><em class="st-best"></em></button>
+          <button class="station" data-station="palacio" style="--st:var(--c1)" aria-pressed="false"><i class="st-ico" aria-hidden="true">⌂</i><b>Palacio</b><small>Memoria asociativa</small><em class="st-best"></em></button>
+          <button class="station" data-station="progreso" style="--st:var(--gold)" aria-pressed="false"><i class="st-ico" aria-hidden="true">★</i><b>Vitrina</b><small>Tu progreso</small><em class="st-best"></em></button>
         </div>
-        <div class="col">
+      </div>
+
+      <header class="mhud mhud-top">
+        <div class="greet"><h1 id="hoy-greet">Buenos días</h1><p class="muted" id="hoy-date"></p></div>
+        <div class="mhud-stats">
+          <span class="stat-chip"><small>Racha</small><b id="hoy-streak">🔥 0</b></span>
+          <span class="stat-chip"><small>Índice</small><b class="im-global" id="hoy-im">–</b></span>
+        </div>
+      </header>
+
+      <div class="mhud mhud-bottom">
+        <div class="camino">
+          <h3 class="sub">Camino de hoy</h3>
+          <div class="mini-games" id="hoy-games"></div>
+        </div>
+        <div class="cta">
+          <button class="btn primary big" id="hoy-start">Comenzar sesión de hoy</button>
+          <p class="pill ok" id="hoy-done" hidden>Sesión de hoy completada</p>
+          <button class="btn ghost small" data-go="juegos">Ver como lista</button>
+        </div>
+      </div>
+
+      <aside class="st-panel" id="st-panel" hidden aria-labelledby="st-title">
+        <div class="row between"><div><span class="tag" id="st-area"></span><h2 id="st-title"></h2></div><button class="icon-btn" id="st-close" aria-label="Volver a la vista general">✕</button></div>
+        <p class="muted" id="st-desc"></p>
+        <p class="small" id="st-best"></p>
+        <div class="row"><button class="btn primary" id="st-play" data-go="pares">Jugar</button><button class="btn ghost small" id="st-help" data-help="pares">¿Cómo se juega?</button></div>
+      </aside>
+
+      <details class="diario" id="diario">
+        <summary><span aria-hidden="true">📖</span> Diario</summary>
+        <div class="diario-in">
           <div class="card">
-            <div class="row between"><h3>Historial de entrenamiento</h3><span class="pill accent" id="hoy-streak">🔥 0</span></div>
+            <div class="row between"><h3>Historial de entrenamiento</h3></div>
             <div class="calendar" id="hoy-cal"></div>
             <p class="muted small" id="hoy-calnote"></p>
           </div>
           <div class="card">
-            <div class="row between"><h3>Índice de Memoria actual</h3><b class="im-global" id="hoy-im">–</b></div>
+            <h3>Índice de Memoria por área</h3>
             <p class="muted small" style="margin-bottom:10px">Promedio de tus últimas sesiones en cada área (0–100).</p>
             <div class="im-bars" id="hoy-bars"></div>
           </div>
+          <div class="card">
+            <h3>Torre de constancia</h3>
+            <p class="muted small" id="torre-txt"></p>
+            <div class="torre" id="torre" role="img"></div>
+          </div>
         </div>
-      </div>
+      </details>
     </section>
 
-    <!-- JUEGOS (biblioteca) -->
+    <!-- JUEGOS (lista accesible) -->
     <section class="view" id="v-juegos" hidden>
       <h1>Juegos</h1>
-      <p class="muted">Tres ejercicios, uno por cada componente de la memoria. Cada uno sube de dificultad según tu rendimiento.</p>
-      <div class="grid3">
-        <article class="gcard">
+      <p class="muted">Cuatro ejercicios, uno por cada tipo de memoria. Cada uno sube de dificultad según tu rendimiento.</p>
+      <div class="grid4">
+        <article class="gcard" style="--st:var(--c4)">
           <span class="tag">Memoria visual a corto plazo</span>
           <h2>Pares</h2>
           <p class="muted">Mira el tablero unos segundos, luego encuentra las parejas en el menor número de intentos.</p>
           <div class="stat"><span>Mejor nivel <b id="h-pares-best">–</b></span><span>Sesiones <b id="h-pares-n">0</b></span></div>
           <div class="row"><button class="btn primary" data-go="pares">Jugar</button><button class="btn ghost small" data-help="pares">¿Cómo se juega?</button></div>
         </article>
-        <article class="gcard">
+        <article class="gcard" style="--st:var(--c6)">
           <span class="tag">Memoria espacial</span>
           <h2>Secuencia</h2>
           <p class="muted">Los bloques se encienden en orden. Repite el orden exacto, o al revés en el modo inverso.</p>
           <div class="stat"><span>Mejor amplitud <b id="h-secuencia-best">–</b></span><span>Sesiones <b id="h-secuencia-n">0</b></span></div>
           <div class="row"><button class="btn primary" data-go="secuencia">Jugar</button><button class="btn ghost small" data-help="secuencia">¿Cómo se juega?</button></div>
         </article>
-        <article class="gcard">
+        <article class="gcard" style="--st:var(--c5)">
           <span class="tag">Memoria de trabajo</span>
           <h2>N-Back</h2>
           <p class="muted">Un cuadro aparece en una celda. Avisa cuando coincide con la posición de N turnos atrás.</p>
           <div class="stat"><span>Mejor precisión <b id="h-nback-best">–</b></span><span>Sesiones <b id="h-nback-n">0</b></span></div>
           <div class="row"><button class="btn primary" data-go="nback">Jugar</button><button class="btn ghost small" data-help="nback">¿Cómo se juega?</button></div>
         </article>
+        <article class="gcard" style="--st:var(--c1)">
+          <span class="tag">Memoria asociativa</span>
+          <h2>Palacio</h2>
+          <p class="muted">Recorre una habitación y recuerda qué objeto había en cada lugar: el método de loci.</p>
+          <div class="stat"><span>Más lugares <b id="h-palacio-best">–</b></span><span>Sesiones <b id="h-palacio-n">0</b></span></div>
+          <div class="row"><button class="btn primary" data-go="palacio">Jugar</button><button class="btn ghost small" data-help="palacio">¿Cómo se juega?</button></div>
+        </article>
       </div>
       <div class="card soft">
         <div class="row between">
           <div>
             <h3>¿Por qué funciona?</h3>
-            <p class="muted" style="max-width:62ch">Cada ejercicio entrena un componente distinto de la memoria descrito por la psicología cognitiva: el almacén a corto plazo (Atkinson y Shiffrin), la amplitud de memoria inmediata (Miller) y la memoria de trabajo (Baddeley y Hitch).</p>
+            <p class="muted" style="max-width:62ch">Cada ejercicio entrena un componente distinto de la memoria descrito por la psicología cognitiva: el almacén a corto plazo (Atkinson y Shiffrin), la amplitud visoespacial (Corsi; Miller), la memoria de trabajo (Baddeley y Hitch) y la memoria asociativa con el método de loci (Yates; Bower).</p>
           </div>
           <button class="btn" data-go="planes">Ver planes</button>
         </div>
@@ -230,10 +261,10 @@
 
     <!-- PARES -->
     <section class="view" id="v-pares" hidden>
-      <div class="card">
+      <div class="card game-card">
         <div class="ghead row between">
           <div><h2>Pares</h2><p class="muted">Memoriza el tablero mientras está destapado. Luego voltea dos cartas por intento.</p></div>
-          <div class="row"><button class="btn ghost small" data-help="pares">Ayuda</button><button class="btn ghost small" data-go="juegos" id="p-exit">Salir</button></div>
+          <div class="row"><button class="btn ghost small" data-help="pares">Ayuda</button><button class="btn ghost small" data-go="hoy" id="p-exit">Salir</button></div>
         </div>
         <div class="hud">
           <div><span class="k">Nivel</span><span class="v" id="p-level">1</span></div>
@@ -241,7 +272,7 @@
           <div><span class="k">Parejas</span><span class="v" id="p-pairs">0/6</span></div>
           <div><span class="k">Tiempo</span><span class="v" id="p-time">0:00</span></div>
         </div>
-        <div class="board" id="p-board" aria-label="Tablero de cartas"></div>
+        <div class="stage3d board-stage" id="p-stage"><div class="board" id="p-board" aria-label="Tablero de cartas"></div></div>
         <p class="msg" id="p-msg" aria-live="polite"></p>
         <div class="stars" id="p-stars" aria-hidden="true"></div>
         <div class="row">
@@ -255,10 +286,10 @@
 
     <!-- SECUENCIA -->
     <section class="view" id="v-secuencia" hidden>
-      <div class="card">
+      <div class="card game-card">
         <div class="ghead row between">
           <div><h2>Secuencia</h2><p class="muted">Observa el orden en que se encienden los bloques y repítelo. Tienes un segundo intento por longitud.</p></div>
-          <div class="row"><button class="btn ghost small" data-help="secuencia">Ayuda</button><button class="btn ghost small" data-go="juegos">Salir</button></div>
+          <div class="row"><button class="btn ghost small" data-help="secuencia">Ayuda</button><button class="btn ghost small" data-go="hoy">Salir</button></div>
         </div>
         <div class="row between" style="margin-bottom:10px">
           <div class="seg" id="s-mode" role="group" aria-label="Modo">
@@ -272,7 +303,7 @@
           <div><span class="k">Amplitud lograda</span><span class="v" id="s-span">0</span></div>
           <div><span class="k">Estado</span><span class="v" id="s-state">Listo</span></div>
         </div>
-        <div class="corsi" id="s-grid" aria-label="Cuadrícula de bloques"></div>
+        <div class="stage3d board-stage" id="s-stage"><div class="corsi" id="s-grid" aria-label="Tablero de bloques"></div></div>
         <p class="msg" id="s-msg" aria-live="polite"></p>
         <div class="row"><button class="btn primary" id="s-start">Empezar</button></div>
       </div>
@@ -280,10 +311,10 @@
 
     <!-- N-BACK -->
     <section class="view" id="v-nback" hidden>
-      <div class="card">
+      <div class="card game-card">
         <div class="ghead row between">
-          <div><h2>N-Back espacial</h2><p class="muted">Cada 2,5 segundos aparece un cuadro. Pulsa <b>Coincide</b> (o la barra espaciadora) cuando la posición sea la misma que hace N turnos.</p></div>
-          <div class="row"><button class="btn ghost small" data-help="nback">Ayuda</button><button class="btn ghost small" data-go="juegos">Salir</button></div>
+          <div><h2>N-Back espacial</h2><p class="muted">Cada 2,5 segundos aparece una ficha. Pulsa <b>Coincide</b> (o la barra espaciadora) cuando la posición sea la misma que hace N turnos.</p></div>
+          <div class="row"><button class="btn ghost small" data-help="nback">Ayuda</button><button class="btn ghost small" data-go="hoy">Salir</button></div>
         </div>
         <div class="row between" style="margin-bottom:12px">
           <div class="row" style="gap:8px"><span class="muted" style="font-weight:700">N =</span>
@@ -302,13 +333,35 @@
           <div><span class="k">Omisiones</span><span class="v" id="n-miss">0</span></div>
           <div><span class="k">Falsas alarmas</span><span class="v" id="n-fa">0</span></div>
         </div>
-        <div class="nb" id="n-grid" aria-label="Cuadrícula de estímulos"></div>
+        <div class="stage3d board-stage" id="n-stage"><div class="nb" id="n-grid" aria-label="Cuadrícula de estímulos"></div></div>
         <div class="trialbar" aria-hidden="true"><i id="n-bar"></i></div>
         <div class="nbctrl">
           <button class="btn primary big" id="n-match" disabled>Coincide</button>
           <button class="btn" id="n-start">Empezar</button>
         </div>
         <p class="msg center" id="n-msg" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- PALACIO DE LA MEMORIA -->
+    <section class="view" id="v-palacio" hidden>
+      <div class="card game-card">
+        <div class="ghead row between">
+          <div><h2>Palacio de la memoria</h2><p class="muted">Recorre la habitación y recuerda qué objeto había en cada lugar. La ruta es siempre la misma.</p></div>
+          <div class="row"><button class="btn ghost small" data-help="palacio">Ayuda</button><button class="btn ghost small" data-go="hoy">Salir</button></div>
+        </div>
+        <div class="hud">
+          <div><span class="k">Lugares</span><span class="v" id="mp-loci">4</span></div>
+          <div><span class="k">Aciertos</span><span class="v" id="mp-correct">0</span></div>
+          <div><span class="k">Estado</span><span class="v" id="mp-state">Listo</span></div>
+        </div>
+        <div class="stage3d mp-stage" id="mp-stage" data-phase="idle" data-locus="-1" data-obj="">
+          <div class="mp-room" id="mp-room" aria-hidden="true"></div>
+          <p class="mp-caption" id="mp-caption" data-locus="-1" data-obj="" aria-live="polite"></p>
+        </div>
+        <div class="mp-options" id="mp-options" role="group" tabindex="-1" aria-label="¿Qué objeto había aquí?"></div>
+        <p class="msg" id="mp-msg" aria-live="polite"></p>
+        <div class="row"><button class="btn primary" id="mp-start">Empezar</button></div>
       </div>
     </section>
 
@@ -336,12 +389,12 @@
         <div class="plans">
           <div class="plan">
             <span class="tag">Gratis</span><h3>Entrenamiento básico</h3><p class="price">S/ 0</p>
-            <ul><li>Pares, Secuencia y N-Back</li><li>Prueba de nivel, sesión diaria y racha</li><li>Progreso en este dispositivo</li><li>Sin anuncios</li></ul>
+            <ul><li>Pares, Secuencia, N-Back y Palacio de la memoria</li><li>Prueba de nivel, sesión diaria y racha</li><li>Progreso en este dispositivo</li><li>Sin anuncios</li></ul>
             <button class="btn" disabled>Plan actual</button>
           </div>
           <div class="plan pro">
             <span class="tag">Pro</span><h3>Entrenamiento completo</h3><p class="price">S/ 9.90 <small>/ mes</small></p>
-            <ul><li>Todo lo del plan gratis</li><li>Progreso sincronizado en la nube</li><li>Informe semanal y comparación por edad</li><li>Ejercicios adicionales: ¿Qué cambió?, Palacio de la memoria</li><li>Modo familia (hasta 4 perfiles)</li></ul>
+            <ul><li>Todo lo del plan gratis</li><li>Progreso sincronizado en la nube</li><li>Informe semanal y comparación por edad</li><li>Ejercicio adicional: ¿Qué cambió? y palacios con varias habitaciones</li><li>Modo familia (hasta 4 perfiles)</li></ul>
             <button class="btn primary" id="pl-pro">Me interesa</button>
           </div>
         </div>
@@ -360,6 +413,13 @@
           <label>Programa</label>
           <div class="row"><button class="btn small" id="a-recal">Repetir prueba de nivel</button><button class="btn ghost small" id="a-reconfig">Volver a configurar</button></div>
           <p class="muted small" id="a-profile"></p>
+
+          <label>Estilo visual</label>
+          <div class="seg" id="a-visual" role="group" aria-label="Estilo visual">
+            <button aria-pressed="true" data-visual="pixel3d">Pixel-3D</button>
+            <button aria-pressed="false" data-visual="clasico">Clásico</button>
+          </div>
+          <p class="muted small" id="a-visual-note"></p>
 
           <label>Sonido</label>
           <div class="row"><label class="switch"><input type="checkbox" id="a-sound"><span></span></label><span class="muted">Efectos y tonos de los bloques</span></div>
@@ -382,7 +442,7 @@
             <button class="btn ghost small" id="a-no">Cancelar</button>
           </div>
         </div>
-        <p class="muted small" style="margin-top:18px">Versión 2.0 · Los datos se guardan solo en este navegador (localStorage). No se envía nada a ningún servidor.</p>
+        <p class="muted small" style="margin-top:18px">Versión 3.0 Pixel-3D (Three.js + Matter.js) · Los datos se guardan solo en este navegador (localStorage). No se envía nada a ningún servidor.</p>
       </div>
     </section>
 
@@ -399,6 +459,6 @@
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<script type="module" src="js/main.js"></script>
+<script defer src="bundle/main.js"></script>
 </body>
 </html>

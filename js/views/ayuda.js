@@ -31,6 +31,16 @@ const HELP = {
       'Con precisión ≥ 85 % el juego te sube N; con menos de 60 % te lo baja. El N recomendado queda guardado.'
     ],
     theory: 'Tarea de Kirchner (1958) usada en el entrenamiento de memoria de trabajo (Jaeggi et al., 2008). Exige mantener y actualizar información a la vez: el ejecutivo central de Baddeley y Hitch (1974).'
+  },
+  palacio: {
+    title: 'Palacio · ¿Cómo se juega?',
+    steps: [
+      'OBSERVA: recorres siempre la misma ruta por una habitación. En cada lugar aparece un objeto durante unos segundos.',
+      'Imagina el objeto metido en ese lugar (una llave colgando del perchero, un pez sobre el sofá): cuanto más visual, mejor.',
+      'TU TURNO: vuelves a recorrer la ruta y en cada lugar eliges qué objeto había entre 4 opciones.',
+      'Con precisión ≥ 85 % la próxima vez recorres más lugares; con menos de 60 %, menos (de 4 a 12).'
+    ],
+    theory: 'Método de loci (Yates, 1966; Bower, 1970): el lugar sirve de pista para recordar. Funciona igual con entornos virtuales (Legge et al., 2012) y su práctica mejora el recuerdo (Dresler et al., 2017). Las opciones incorrectas son objetos de otros lugares del mismo recorrido: se mide la asociación objeto–lugar.'
   }
 };
 

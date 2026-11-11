@@ -1,0 +1,111 @@
+/* mundo.css — el gimnasio (hub) y la barra superior.
+   Piel 3D: la escena ocupa la pantalla; HUD, estaciones (botones proyectados), panel y Diario flotan encima.
+   Piel clásica: los mismos elementos en flujo normal; las estaciones son tarjetas. */
+
+/* ---------- Estructura: barra superior en lugar del menú lateral ---------- */
+.app{display:block;min-height:100%}
+.topnav{position:sticky;top:0;z-index:9;display:flex;align-items:center;gap:14px;height:var(--nav-h);padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:var(--bw) solid var(--fg);box-shadow:0 3px 0 var(--edge)}
+.topnav .brand{display:flex;align-items:center;gap:10px;font-weight:700;background:none;border:0;padding:4px;font-family:var(--pixel-font);font-size:1.1rem}
+.topnav .brand .mark{width:34px;height:34px;border-radius:var(--r);border:var(--bw) solid var(--fg);background:var(--accent);display:grid;place-items:center;color:var(--accent-fg);font-size:.85rem;box-shadow:var(--bevel)}
+.topnav nav{display:flex;gap:4px;margin-left:auto}
+.topnav nav button{display:flex;align-items:center;gap:8px;background:transparent;border:var(--bw) solid transparent;border-radius:var(--r);padding:8px 12px;font-weight:700;color:var(--muted)}
+.topnav nav button i{font-style:normal;font-size:1.05rem}
+.topnav nav button:hover{color:var(--fg);border-color:var(--line)}
+.topnav nav button[aria-current="page"]{color:var(--fg);background:var(--accent-soft);border-color:var(--fg);box-shadow:inset 0 -3px 0 var(--accent)}
+.streak-pill{font-family:var(--pixel-font)}
+main.wrap{max-width:1180px;margin:0 auto;padding-top:20px;padding-bottom:40px}
+main.wrap > .view:not(.mundo){max-width:960px;margin:0 auto;display:grid;gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+
+@media (max-width:720px){
+  .topnav{justify-content:space-between}
+  .topnav .brand span:last-child{display:none}
+  .topnav nav{position:fixed;left:0;right:0;bottom:0;margin:0;justify-content:space-around;background:var(--surface);border-top:var(--bw) solid var(--fg);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));z-index:9}
+  .topnav nav button{flex-direction:column;gap:2px;padding:6px 10px;font-size:.75rem;min-width:64px;min-height:52px}
+  main.wrap{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+}
+
+/* ---------- Gimnasio: elementos comunes ---------- */
+.mundo{position:relative}
+.station{font:inherit;color:var(--fg);cursor:pointer}
+.station b{font-family:var(--pixel-font);font-size:1.1rem}
+.station small{color:var(--muted);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.station em{font-style:normal;font-size:.8rem;color:var(--muted)}
+.station.done b::after{content:" ✓";color:var(--ok)}
+.station.next{outline:3px solid var(--gold);outline-offset:2px}
+.station.next b::before{content:"▶ ";color:var(--warn)}
+.station.off{opacity:.6}
+.station[aria-pressed="true"]{background:var(--st);color:#fff}
+.station[aria-pressed="true"] small,.station[aria-pressed="true"] em{color:#fff}
+.stat-chip{display:inline-grid;gap:0;justify-items:center;padding:6px 12px;background:var(--surface);border:var(--bw) solid var(--fg);border-radius:var(--r);box-shadow:var(--drop)}
+.stat-chip small{font-family:var(--pixel-font);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.stat-chip b{font-family:var(--pixel-font);font-size:1.4rem;line-height:1.1}
+.mhud-stats{display:flex;gap:8px}
+.greet h1{font-size:clamp(1.5rem,3.4vw,2.2rem)}
+.camino .sub{margin:0 0 6px;font-family:var(--pixel-font);font-size:.95rem;text-transform:uppercase;letter-spacing:.05em}
+.mini-games{display:flex;gap:8px 14px;flex-wrap:wrap}
+.mini-games i{border-radius:var(--r);border:var(--bw) solid var(--fg);font-family:var(--pixel-font);font-size:.95rem}
+.mini-games .done i{font-size:0}
+.mini-games .done i::after{font-size:.95rem}
+.cta{display:grid;gap:8px;justify-items:center}
+.st-panel{display:grid;gap:10px;padding:16px;background:var(--surface);border:var(--bw) solid var(--fg);border-radius:var(--r-lg);box-shadow:var(--shadow-lg)}
+.st-panel h2{font-size:1.5rem}
+.diario summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;font-weight:700;background:var(--surface);border:var(--bw) solid var(--fg);border-radius:var(--r);box-shadow:var(--drop);font-family:var(--pixel-font)}
+.diario summary::-webkit-details-marker{display:none}
+.diario[open] summary{background:var(--accent-soft)}
+.diario-in{display:grid;gap:12px;margin-top:10px}
+.torre{position:relative;height:300px;max-width:200px;margin:8px auto 0;overflow:hidden;background:var(--surface-2);border:var(--bw) solid var(--fg);border-radius:var(--r)}
+.torre [data-block]{position:absolute;left:0;top:0;width:26px;height:26px;background:var(--pb,var(--ok));box-shadow:inset -3px -3px 0 rgba(0,0,0,.25),inset 3px 3px 0 rgba(255,255,255,.35);transform:translate(-100px,-100px)}
+
+/* ---------- Piel clásica: flujo normal, estaciones como tarjetas ---------- */
+.skin-clasico .mundo{display:grid;gap:16px;grid-template-areas:"top" "stage" "bottom" "panel" "diario"}
+.skin-clasico .mhud-top{grid-area:top;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.skin-clasico .mundo-stage{grid-area:stage}
+.skin-clasico .mhud-bottom{grid-area:bottom;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:16px;background:var(--surface);border:var(--bw) solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+.skin-clasico .st-panel{grid-area:panel}
+.skin-clasico .diario{grid-area:diario}
+.skin-clasico .stations{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.skin-clasico .station{display:grid;gap:4px;justify-items:start;text-align:left;padding:14px;min-height:120px;background:var(--surface);border:var(--bw) solid var(--line);border-top:6px solid var(--st);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+.skin-clasico .station .st-ico{font-style:normal;font-size:1.4rem;color:var(--st)}
+.skin-clasico .station:active{transform:translateY(3px)}
+.skin-clasico .diario-in{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+
+/* ---------- Piel 3D: la escena ocupa la pantalla y todo flota encima ---------- */
+.skin-3d main.wrap:has(> #v-hoy:not([hidden])){max-width:none;padding:0}
+.skin-3d .mundo{height:calc(100dvh - var(--nav-h));min-height:540px;overflow:hidden}
+.skin-3d .mundo-stage{position:absolute;inset:0}
+.skin-3d .stations{position:absolute;inset:0;pointer-events:none}
+.skin-3d .station{position:absolute;left:0;top:0;pointer-events:auto;display:grid;justify-items:center;gap:0;min-width:104px;min-height:48px;padding:6px 10px;background:var(--surface);border:var(--bw) solid var(--fg);border-bottom:5px solid var(--st);border-radius:var(--r);box-shadow:var(--drop);visibility:hidden}
+.skin-3d .mundo-stage.ready .station[style*="translate"]{visibility:visible}
+.skin-3d .station .st-ico,.skin-3d .station small{display:none}
+.skin-3d .station[aria-pressed="true"]{background:var(--st);color:#fff;border-color:var(--fg)}
+.skin-3d .station[aria-pressed="true"] em{color:#fff}
+.skin-3d .station:active{filter:brightness(.95)}
+.skin-3d .mhud{position:absolute;left:16px;right:16px;z-index:3;pointer-events:none}
+.skin-3d .mhud > *{pointer-events:auto}
+.skin-3d .mhud-top{top:14px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.skin-3d .greet{padding:10px 14px;background:color-mix(in srgb,var(--surface) 88%,transparent);border:var(--bw) solid var(--fg);border-radius:var(--r);box-shadow:var(--drop);max-width:min(460px,60vw)}
+.skin-3d .mhud-bottom{bottom:16px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.skin-3d .camino{padding:10px 14px;background:color-mix(in srgb,var(--surface) 90%,transparent);border:var(--bw) solid var(--fg);border-radius:var(--r);box-shadow:var(--drop)}
+.skin-3d .cta{padding:12px;background:color-mix(in srgb,var(--surface) 90%,transparent);border:var(--bw) solid var(--fg);border-radius:var(--r);box-shadow:var(--drop)}
+.skin-3d .st-panel{position:absolute;z-index:4;right:16px;top:50%;transform:translateY(-50%);width:min(340px,calc(100% - 32px))}
+.skin-3d .diario{position:absolute;z-index:4;left:16px;top:118px;max-width:min(380px,calc(100% - 32px))}
+.skin-3d .diario-in{max-height:max(220px,calc(100dvh - var(--nav-h) - 360px));overflow:auto;padding-right:4px}
+.skin-3d .torre{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);margin:0;border:0}
+
+@media (max-width:720px){
+  .skin-3d .mundo{height:calc(100dvh - var(--nav-h) - 72px);min-height:520px}
+  .skin-3d .greet{max-width:62vw;padding:8px 10px}
+  .skin-3d .greet .muted{display:none}
+  .skin-3d .mhud-bottom{flex-direction:column;align-items:stretch;gap:8px}
+  .skin-3d .camino{display:none}
+  .skin-3d .st-panel{top:auto;bottom:12px;transform:none;left:12px;right:12px;width:auto}
+  .skin-3d .diario{top:96px}
+  /* Pantallas estrechas: rótulos compactos para que no se solapen (siguen siendo objetivos de ≥ 40 px de alto con el borde) */
+  .skin-3d .station{min-width:0;min-height:40px;padding:3px 7px;border-bottom-width:4px}
+  .skin-3d .station b{font-size:.82rem}
+  .skin-3d .station em{display:none}
+}
+@media (prefers-reduced-transparency:reduce){
+  .skin-3d .greet,.skin-3d .camino,.skin-3d .cta{background:var(--surface)}
+}

@@ -5,6 +5,15 @@ import { tone } from '../audio.js';
 import { sesion } from './sesion.js';
 import { config } from './config.js';
 import { GAMES } from '../indice.js';
+import { preference, setPreference, is3d } from '../three/skin.js';
+
+function markVisual() {
+  const pref = preference();
+  $$('#a-visual button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.visual === pref)));
+  $('#a-visual-note').textContent = pref === 'pixel3d' && !is3d()
+    ? 'Este dispositivo no puede mostrar el 3D: se usa el estilo clásico.'
+    : 'Pixel-3D dibuja los juegos con Three.js; el estilo clásico es más ligero.';
+}
 
 export function applyTheme(theme) {
   const root = document.documentElement;
@@ -30,6 +39,12 @@ export const ajustes = {
       $$('#a-theme button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
       store.setSetting('theme', b.dataset.theme); applyTheme(b.dataset.theme);
     });
+    $('#a-visual').addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      setPreference(b.dataset.visual);
+      markVisual();
+      toast(is3d() ? 'Estilo Pixel-3D activado' : 'Estilo clásico activado');
+    });
     $('#a-recal').addEventListener('click', () => sesion.start('calibracion'));
     $('#a-reconfig').addEventListener('click', () => config.restart());
     $('#a-clear').addEventListener('click', () => { $('#a-confirm').hidden = false; });
@@ -42,6 +57,7 @@ export const ajustes = {
     });
   },
   enter() {
+    markVisual();
     const p = store.profile; $('#a-name').value = p.name;
     const goals = { entrenar: 'entrenar la memoria', mantener: 'mantener la mente activa', superar: 'superarse', explorar: 'explorar' };
     $('#a-profile').textContent = p.onboarded

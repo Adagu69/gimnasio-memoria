@@ -13,6 +13,9 @@ let level = 0, first = null, lock = false, moves = 0, matched = 0, total = 0, t0
 let onEnd = null;
 let board, elLevel, elMoves, elPairs, elTime, elMsg, elStars, bStart, bNext, bRetry, bReset;
 
+/** Duración de la fase de memorización (ms): 1,5 s + 150 ms por pareja. */
+export function previewMs(pairs) { return 1500 + pairs * 150; }
+
 export function stars(pairs, mv) {
   const r = mv / pairs;
   return r <= 1.5 ? 3 : r <= 2.2 ? 2 : 1;
@@ -47,10 +50,10 @@ function build() {
     board.appendChild(b);
   });
   // Fase de memorización
-  const previewMs = 1500 + total * 150;
+  const ms = previewMs(total);
   board.classList.add('preview');
-  setMsg(elMsg, `Memoriza el tablero… ${Math.round(previewMs / 1000)} s`, 'warn');
-  let left = Math.round(previewMs / 1000);
+  setMsg(elMsg, `Memoriza el tablero… ${Math.round(ms / 1000)} s`, 'warn');
+  let left = Math.round(ms / 1000);
   const cd = setInterval(() => { left--; if (left > 0) setMsg(elMsg, `Memoriza el tablero… ${left} s`, 'warn'); }, 1000);
   previewTimer = setTimeout(() => {
     clearInterval(cd);
@@ -59,7 +62,7 @@ function build() {
     lock = false;
     setMsg(elMsg, 'Encuentra las parejas.');
     t0 = Date.now(); timer = setInterval(tick, 500);
-  }, previewMs);
+  }, ms);
 }
 
 function flip(b) {

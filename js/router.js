@@ -1,7 +1,7 @@
 // router.js — muestra una vista a la vez y avisa a quien lo necesite.
 import { $, $$ } from './ui.js';
 
-export const VIEWS = ['bienvenida', 'config', 'sesion', 'resultados', 'plan', 'hoy', 'juegos', 'pares', 'secuencia', 'nback', 'progreso', 'planes', 'ajustes'];
+export const VIEWS = ['bienvenida', 'config', 'sesion', 'resultados', 'plan', 'hoy', 'juegos', 'pares', 'secuencia', 'nback', 'palacio', 'progreso', 'planes', 'ajustes'];
 const FOCUS = ['bienvenida', 'config', 'sesion', 'resultados', 'plan']; // pantalla completa, sin menú
 
 const enterHooks = {};
@@ -20,8 +20,8 @@ export function go(view, params = {}) {
   // Entrada "desde el valor actual": se fija el estado inicial y, al siguiente frame, la transición
   // lleva la vista a su reposo. Si el usuario cambia de vista a mitad, la transición se redirige sin salto.
   if (view !== current) enterAnim($('#v-' + view));
-  const navFor = { pares: 'juegos', secuencia: 'juegos', nback: 'juegos', planes: 'ajustes' };
-  $$('.side nav button').forEach(b => {
+  const navFor = { pares: 'hoy', secuencia: 'hoy', nback: 'hoy', palacio: 'hoy', planes: 'ajustes' };
+  $$('.topnav nav button').forEach(b => {
     if (b.dataset.go === (navFor[view] || view)) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
   current = view;
